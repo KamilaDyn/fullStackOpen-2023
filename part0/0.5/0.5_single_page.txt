@@ -1,0 +1,32 @@
+sequenceDiagram
+    participant browser
+    participant server
+    Note right of browser: User open page
+    browser->>server: GET HTTP https://studies.cs.helsinki.fi/exampleapp/spa
+    activate server
+    server-->>browser: HTML code
+    deactivate server
+
+    browser->>server: GET HTTP https://studies.cs.helsinki.fi/exampleapp/main.css
+    activate server
+    server-->>browser: main.css file
+    deactivate server
+
+    browser->>server: GET HTTP https://studies.cs.helsinki.fi/exampleapp/spa.js
+    activate server
+    server-->>browser: spa.js file
+    deactivate server
+
+    Note right of browser: Browser start excecuting javascript code that request JSON data from server
+
+    browser->>server: GET Json data https://studies.cs.helsinki.fi/exampleapp/data.json
+    activate server
+    server-->>browser: JSON file content [{"content":"asdfdsaf","date":"2023-03-30T06:49:45.949Z"},...]
+    deactivate server
+
+    browser->>server: GET HTTP https://studies.cs.helsinki.fi/favicon.ico
+    activate server
+    server-->>browser: favicon.ico
+    deactivate server
+
+    Note right of browser: Browser executes the event handler that reders notes o  display

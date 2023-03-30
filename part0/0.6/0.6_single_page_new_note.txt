@@ -1,0 +1,10 @@
+sequenceDiagram
+    participant browser
+    participant server
+    Note right of browser: User  create new note and click button save
+    Note right of browser: Update dom with new note li element, convert note to JSON 
+    browser->>server: POST HTTP https://studies.cs.helsinki.fi/exampleapp/new_note_spa
+    Note left of server: server add new note to notes page
+    activate server
+    server-->>browser: status code 201 -created {content: "new me", date: "2023-03-30T15:21:15.831Z"}
+    deactivate server
