@@ -6,23 +6,21 @@ const Header = ({ title }) => {
 
 const StatisticLine = ({ text, value }) => {
   return (
-    <table>
-      <tbody>
-        <tr>
-          <td>{text}</td>
-          <td>{value}</td>
-        </tr>
-      </tbody>
-    </table>
+    <tr>
+      <td>{text}</td>
+      <td>{value}</td>
+    </tr>
   );
 };
 const Statistic = ({ statistic }) => {
   return (
-    <div>
-      {statistic.map((item) => (
-        <StatisticLine key={item.name} text={item.name} value={item.state} />
-      ))}
-    </div>
+    <table>
+      <tbody>
+        {statistic.map((item) => (
+          <StatisticLine key={item.name} text={item.name} value={item.state} />
+        ))}
+      </tbody>
+    </table>
   );
 };
 
