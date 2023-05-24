@@ -1,5 +1,7 @@
 import { useState } from "react";
-function PersonForm({ persons, setPersons }) {
+import { createPerson, updatePerson } from "../services/persons";
+
+function PersonForm({ persons, setPersons, fetchData }) {
   const [newName, setNewName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const handlePersonChange = (event) => {
@@ -13,17 +15,34 @@ function PersonForm({ persons, setPersons }) {
     const newPerson = {
       name: newName,
       number: phoneNumber,
-      id: persons.length + 1,
     };
+    const theSamePerson = persons.some(
+      (person) => person.name.toLowerCase() === newName.toLowerCase()
+    );
 
     if (!newName || !phoneNumber) {
       alert("fill all fields");
-    } else if (persons.some((person) => person.name === newName)) {
-      alert(`${newName} is already added to phonebook`);
+    } else if (theSamePerson) {
+      const idPerson = persons.find(
+        (person) => person.name.toLowerCase() === newName.toLowerCase()
+      );
+      const replacePhoneNumber = window.confirm(
+        `${newName} is already added to phonebook, replace the old number with a new one?`
+      );
+      if (replacePhoneNumber) {
+        updatePerson(idPerson.id, { ...idPerson, number: newPerson.number });
+        fetchData();
+        setNewName("");
+        setPhoneNumber("");
+      }
     } else {
-      setPersons((prevValue) => [...prevValue, newPerson]);
-      setNewName("");
-      setPhoneNumber("");
+      createPerson(newPerson)
+        .then((response) => {
+          setPersons((prevValue) => [...prevValue, response]);
+          setNewName("");
+          setPhoneNumber("");
+        })
+        .catch((err) => alert(`There were a problem with ${err.message}`));
     }
   };
   return (

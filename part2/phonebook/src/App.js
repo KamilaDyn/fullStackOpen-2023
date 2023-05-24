@@ -1,8 +1,8 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
+import { getAllPersons } from "./services/persons";
 
 const App = () => {
   const [persons, setPersons] = useState();
@@ -12,10 +12,9 @@ const App = () => {
     setFilteredName(event.target.value);
   };
   const fetchData = () => {
-    axios
-      .get("http://localhost:3001/persons")
+    getAllPersons()
       .then((response) => {
-        setPersons(response.data);
+        setPersons(response);
       })
       .catch((err) => console.error(err));
   };
@@ -28,13 +27,18 @@ const App = () => {
     <div>
       <Filter value={filteredName} handleChange={changeFilterName} />
       <h2>Phonebook</h2>
-      <PersonForm persons={persons} setPersons={setPersons} />
+      <PersonForm
+        persons={persons}
+        setPersons={setPersons}
+        fetchData={fetchData}
+      />
       <h2>Numbers</h2>
       {persons && (
         <Persons
           persons={persons.filter((person) =>
             person.name.toLocaleLowerCase().includes(filteredName)
           )}
+          setPersons={setPersons}
         />
       )}
     </div>
