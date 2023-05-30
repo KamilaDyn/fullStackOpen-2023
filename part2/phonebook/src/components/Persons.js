@@ -1,6 +1,6 @@
 import { deletePerson } from "../services/persons";
 
-function Persons({ persons, setPersons }) {
+function Persons({ persons, setPersons, setNotification }) {
   const handleDelete = (id) => {
     const person = persons.find((p) => p.id === id);
     const confirmDeletePerson = window.confirm(
@@ -8,8 +8,20 @@ function Persons({ persons, setPersons }) {
     );
 
     if (confirmDeletePerson) {
-      deletePerson(id);
-      setPersons(persons.filter((item) => item.id !== person.id));
+      deletePerson(id)
+        .then((response) => {
+          setPersons(persons.filter((item) => item.id !== person.id));
+          setNotification({
+            type: "notification",
+            text: `${person.name} has been removed from server`,
+          });
+        })
+        .catch((err) =>
+          setNotification({
+            type: "error",
+            text: `Information of ${person.name} has already been removed from server`,
+          })
+        );
     }
   };
   return (

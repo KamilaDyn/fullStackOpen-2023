@@ -2,12 +2,13 @@ import { useEffect, useState } from "react";
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
+import Notification from "./components/Notification";
 import { getAllPersons } from "./services/persons";
 
 const App = () => {
   const [persons, setPersons] = useState();
   const [filteredName, setFilteredName] = useState("");
-
+  const [notification, setNotification] = useState(null);
   const changeFilterName = (event) => {
     setFilteredName(event.target.value);
   };
@@ -27,10 +28,15 @@ const App = () => {
     <div>
       <Filter value={filteredName} handleChange={changeFilterName} />
       <h2>Phonebook</h2>
+      <Notification
+        notification={notification}
+        setNotification={setNotification}
+      />
       <PersonForm
         persons={persons}
         setPersons={setPersons}
         fetchData={fetchData}
+        setNotification={setNotification}
       />
       <h2>Numbers</h2>
       {persons && (
@@ -39,6 +45,7 @@ const App = () => {
             person.name.toLocaleLowerCase().includes(filteredName)
           )}
           setPersons={setPersons}
+          setNotification={setNotification}
         />
       )}
     </div>

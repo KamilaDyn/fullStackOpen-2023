@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { createPerson, updatePerson } from "../services/persons";
 
-function PersonForm({ persons, setPersons, fetchData }) {
+function PersonForm({ persons, setPersons, fetchData, setNotification }) {
   const [newName, setNewName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const handlePersonChange = (event) => {
@@ -41,6 +41,10 @@ function PersonForm({ persons, setPersons, fetchData }) {
           setPersons((prevValue) => [...prevValue, response]);
           setNewName("");
           setPhoneNumber("");
+          setNotification({
+            type: "notification",
+            text: `Added ${newPerson.name}`,
+          });
         })
         .catch((err) => alert(`There were a problem with ${err.message}`));
     }
