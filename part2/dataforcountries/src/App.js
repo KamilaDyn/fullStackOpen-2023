@@ -24,6 +24,10 @@ function App() {
       .toLowerCase()
       .includes(countryFilter.toLowerCase());
   });
+  const showCountry = (event) => {
+    event.preventDefault();
+    setCountryFilter(event.target.value);
+  };
 
   return (
     <div className="App">
@@ -31,7 +35,7 @@ function App() {
         countryName={countryFilter}
         handleCountryName={handleCountryName}
       />
-      <Countries countries={countryFiltering} />
+      <Countries countries={countryFiltering} showCountry={showCountry} />
     </div>
   );
 }
