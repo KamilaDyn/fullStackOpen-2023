@@ -1,5 +1,6 @@
-function SingleCountry({ singleCountry }) {
+function SingleCountry({ singleCountry, weather }) {
   const language = singleCountry.languages;
+
   return (
     <>
       <div>
@@ -21,6 +22,17 @@ function SingleCountry({ singleCountry }) {
           width="240"
         />
       </div>
+      {weather && (
+        <div>
+          <h3>Weather in {singleCountry.capital}</h3>
+          <p>Temperature {(weather?.main?.temp - 273.15).toFixed(2)} Celsius</p>
+          <img
+            src={`https://openweathermap.org/img/wn/${weather?.weather[0]?.icon}@2x.png`}
+            alt="ok"
+          />
+          <p>Wind {weather?.wind?.speed} m/s</p>
+        </div>
+      )}
     </>
   );
 }

@@ -1,10 +1,11 @@
 import SingleCountry from "./SingleCountry";
-function Countries({ countries, showCountry }) {
+function Countries({ countries, showCountry, weather }) {
   if (countries.length > 10) {
     return <p>To many matches, specify another filter</p>;
   } else if (countries.length === 1) {
     const singleCountry = countries[0];
-    return <SingleCountry singleCountry={singleCountry} />;
+
+    return <SingleCountry singleCountry={singleCountry} weather={weather} />;
   }
   return countries.map((country) => (
     <div key={country.name.common}>
