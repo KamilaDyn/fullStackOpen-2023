@@ -10,7 +10,7 @@ function SingleCountry({ singleCountry }) {
       <div>
         <h3>Languages</h3>
         {Object.keys(language).map((key) => (
-          <p>{language[key]}</p>
+          <p key={language[key]}>{language[key]}</p>
         ))}
       </div>
       <div>

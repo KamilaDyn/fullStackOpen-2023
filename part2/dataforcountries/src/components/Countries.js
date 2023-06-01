@@ -6,7 +6,9 @@ function Countries({ countries }) {
     const singleCountry = countries[0];
     return <SingleCountry singleCountry={singleCountry} />;
   }
-  return countries.map((country) => <p>{country.name.common}</p>);
+  return countries.map((country) => (
+    <p key={country.name.common}>{country.name.common}</p>
+  ));
 }
 
 export default Countries;
