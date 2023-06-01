@@ -10,9 +10,11 @@ function SingleCountry({ singleCountry, weather }) {
       </div>
       <div>
         <h3>Languages</h3>
-        {Object.keys(language).map((key) => (
-          <p key={language[key]}>{language[key]}</p>
-        ))}
+        <ul>
+          {Object.keys(language).map((key) => (
+            <li key={language[key]}>{language[key]}</li>
+          ))}
+        </ul>
       </div>
       <div>
         <img
