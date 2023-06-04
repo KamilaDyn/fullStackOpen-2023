@@ -6,7 +6,7 @@ The course us an introduction to modern web development in JavaScript. Main focu
 
 ## PART0 Fundamentals of Web apps
 
-An overall introduction to the course. It introduces to some concepts like HTTP requests, how traditional web apps work, DOM, CSS and Single Page Applications. <a href='https://fullstackopen.com/en/part0/fundamentals_of_web_apps'>info</a>
+An overall introduction to the course. It introduces to some concepts like HTTP requests, how traditional web apps work, DOM, CSS and Single Page Applications. <a href='https://fullstackopen.com/en/part0/fundamentals_of_web_apps'>Info</a>
 
 <ul>
 <li><b>New note diagram: </b>The diagram shows how communicate the browser and the server when user added a note to a page containing JavaScript.</li>
@@ -27,7 +27,7 @@ This part introduces to React concepts. It covers the basics: components, props,
 
 ## PART2 Communicating with server
 
-This part covers how to display list items in React and how to handle forms. Introduces JSON server and fetching data from it, axios for sending GET, PUT, POST and DELETE requests. Extend app, with adding style CSS<a href='https://fullstackopen.com/en/part2'>Info</a>
+This part covers how to display list items in React and how to handle forms. Introduces JSON server and fetching data from it, axios for sending GET, PUT, POST and DELETE requests. Extend app, with adding style CSS. <a href='https://fullstackopen.com/en/part2'>Info</a>
 
 <ul>
 <li><b>Course information: </b> Extended Course info app from part 1. Show sum of exercises, extend application to allow for an arbitrary number of courses</li>
