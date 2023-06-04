@@ -2,7 +2,7 @@
 
 ## About the course
 
-The course us an introduction to modern web development in JavaScript. Main focus in a single page applications implemented with React and supporting them with RESTful and GraphQL web services implemented with Node.js. The course also has parts on TypeScript, React Native, and Continuous integration. <a href='https://fullstackopen.com/en/'>More info</a>
+The course is about an introduction to modern web development in JavaScript. Main focus in a single page applications implemented with React and supporting them with RESTful and GraphQL web services implemented with Node.js. The course also has parts on TypeScript, React Native, and Continuous integration. <a href='https://fullstackopen.com/en/'>More info</a>
 
 ## PART0 Fundamentals of Web apps
 
