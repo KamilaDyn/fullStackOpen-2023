@@ -2,7 +2,7 @@
 
 ## About the course
 
-The course us an introduction to modern web development in JavaScript. Main focus in a single page applications implemented with React and supporting them with RESTful and GraphQL web services implemented with Node.js. The course also has parts on TypeScript, React Native, and Continuous integration.
+The course us an introduction to modern web development in JavaScript. Main focus in a single page applications implemented with React and supporting them with RESTful and GraphQL web services implemented with Node.js. The course also has parts on TypeScript, React Native, and Continuous integration. <a href='https://fullstackopen.com/en/'>More info</a>
 
 ## PART0 Fundamentals of Web apps
 
@@ -16,7 +16,7 @@ An overall introduction to the course. It introduces to some concepts like HTTP 
 
 ## PART1 Introduction to React
 
-This part introduces to React concepts. It covers the basics: components, props, JSX and more advanced concepts: Javascript functionalities that are used a lot in React (.map(), .filter(), .reduce()), destructuring, event handlers in React and passing state to child components, spread operator, hooks and their rules and conditional rendering.
+This part introduces to React concepts. It covers the basics: components, props, JSX and more advanced concepts: Javascript functionalities that are used a lot in React (.map(), .filter(), .reduce()), destructuring, event handlers in React and passing state to child components, spread operator, hooks and their rules and conditional rendering. <a href='https://fullstackopen.com/en/part1'>Info</a>
 
 <ul>
 <li><b>Course information: </b>  Simple app about course information page which counts total number of exercises of the course.
@@ -26,6 +26,8 @@ This part introduces to React concepts. It covers the basics: components, props,
 </ul>
 
 ## PART2 Communicating with server
+
+This part covers how to display list items in React and how to handle forms. Introduces JSON server and fetching data from it, axios for sending GET, PUT, POST and DELETE requests. Extend app, with adding style CSS<a href='https://fullstackopen.com/en/part2'>Info</a>
 
 <ul>
 <li><b>Course information: </b> Extended Course info app from part 1. Show sum of exercises, extend application to allow for an arbitrary number of courses</li>
