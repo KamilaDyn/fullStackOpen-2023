@@ -16,15 +16,15 @@ function PersonForm({ persons, setPersons, fetchData, setNotification }) {
       name: newName,
       number: phoneNumber,
     };
-    const theSamePerson = persons.some(
-      (person) => person.name.toLowerCase() === newName.toLowerCase()
+    const theSamePerson = persons?.some(
+      (person) => person?.name?.toLowerCase() === newName.toLowerCase()
     );
 
     if (!newName || !phoneNumber) {
       alert("fill all fields");
     } else if (theSamePerson) {
       const idPerson = persons.find(
-        (person) => person.name.toLowerCase() === newName.toLowerCase()
+        (person) => person?.name?.toLowerCase() === newName.toLowerCase()
       );
       const replacePhoneNumber = window.confirm(
         `${newName} is already added to phonebook, replace the old number with a new one?`

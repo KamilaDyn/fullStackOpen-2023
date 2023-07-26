@@ -42,7 +42,7 @@ const App = () => {
       {persons && (
         <Persons
           persons={persons.filter((person) =>
-            person.name.toLocaleLowerCase().includes(filteredName)
+            person?.name?.toLowerCase().includes(filteredName)
           )}
           setPersons={setPersons}
           setNotification={setNotification}
