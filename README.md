@@ -36,3 +36,20 @@ This part covers how to display list items in React and how to handle forms. Int
 </ul>
 
 ## PART3 Programming a server with NodeJS and Express
+
+In this part our focus shifts towards the backend, that is, towards implementing functionality on the server side of the stack. Implement a simple REST API in Node.js by using the Express library, and the application's data will be stored in a MongoDB database. Deploy application to the internet. I used render free server.
+
+<ul>
+<li><b>Phone boook backend </b> Implement a Node application that returns a hardcoded list of phonebook entries from the address http://localhost:3001/api/persons.</br> Implement a page at the address http://localhost:3001/info </br> Implement the functionality for displaying the information for a single phonebook entry.  </br> Implement functionality that makes it possible to delete a single phonebook entry by making an HTTP DELETE request  </br> Expand the backend so that new phonebook entries can be added by making HTTP POST requests </br> Implement error handling for creating new entries. </li>
+<li><b> Phone book deploy app to internet </b>
+Deploy the backend to the internet, I choose  Render. </b>
+Generate a production build of  frontend from part 3
+</li>
+<li>
+<b>Saving data to MongoDB</b>
+connect app to mongoDB 
+</li>
+<li><b>Validation and ESLint</b>
+add validation so that the name stored in the database has to be at least three characters long and phone numbers are of correct form  </br> Add liny configuration 
+</li>
+</ul>
