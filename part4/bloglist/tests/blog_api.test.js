@@ -20,6 +20,17 @@ describe("test for get blogs", () => {
 });
 
 describe("post http request", () => {
+  beforeEach(async () => {
+    let header;
+    const user = {
+      username: "root",
+      password: "password",
+    };
+
+    const loginUser = await api.post("/api/login").send(user);
+
+    header = { Authorization: `bearer ${loginUser.body_token}` };
+  });
   test("creates a new blog post", async () => {
     const blogsAtStart = await helpers.blogsInDb();
 
@@ -41,6 +52,16 @@ describe("post http request", () => {
     expect(contents).toContain("Java Script");
   });
 
+  test("return 401 when token is not provided", async () => {
+    const newBlog = {
+      title: "Add blog without token",
+      author: "Kamila",
+      url: "google.com",
+      likes: 10,
+    };
+
+    await api.post("/api/blogs").send(newBlog).expect(401);
+  }, 10000);
   test("likes property is missing from the request", async () => {
     const newBlog = {
       title: "Node",
