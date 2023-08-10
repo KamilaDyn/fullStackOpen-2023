@@ -30,7 +30,7 @@ blogSchema.set("toJSON", {
     delete returnedObject.__v;
   },
 });
-// blogSchema.plugin(uniqueValidator);
+blogSchema.plugin(uniqueValidator);
 const Blog = mongoose.model("Blog", blogSchema);
 
 module.exports = Blog;
