@@ -6,8 +6,9 @@ const initialBlog = {
   author: "",
   url: "",
 };
-const BlogForm = ({ refreshBlogs }) => {
+const BlogForm = ({ refreshBlogs, setNotification }) => {
   const [blogData, setBlogData] = useState(initialBlog);
+
   const { title, author, url } = blogData;
 
   const handleChange = (event) => {
@@ -19,6 +20,10 @@ const BlogForm = ({ refreshBlogs }) => {
     e.preventDefault();
     try {
       await createBlog(blogData);
+      setNotification({
+        type: "notification",
+        text: `Success, a new blog ${blogData.title} by ${blogData.author} added.`,
+      });
       setBlogData(initialBlog);
       await refreshBlogs();
     } catch (err) {
