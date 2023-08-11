@@ -13,12 +13,7 @@ const App = () => {
   const [userData, setUserData] = useState({ username: "", password: "" });
   const [user, setUser] = useState(null);
   const [notification, setNotification] = useState(null);
-  const [blogFormVisible, setBlogFormVisible] = useState(false);
-  const toggleVisibility = () => {
-    setBlogFormVisible((prevValue) => !prevValue);
-  };
-  const hideWhenVisible = { display: blogFormVisible ? "none" : "" };
-  const showWhenVisible = { display: blogFormVisible ? "" : "none" };
+
   const handleChange = ({ target }) => {
     const { name, value } = target;
     setUserData((prevData) => ({ ...prevData, [name]: value }));
