@@ -5,58 +5,39 @@ import { login } from "./services/login";
 import { removeToken, setToken } from "./storage";
 import BlogForm from "./components/BlogForm";
 import Notification from "./components/Notification";
+import LoginForm from "./components/LoginForm";
+import Taggable from "./components/Togglable";
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [userData, setUserData] = useState({ username: "", password: "" });
   const [user, setUser] = useState(null);
   const [notification, setNotification] = useState(null);
+  const [blogFormVisible, setBlogFormVisible] = useState(false);
+  const toggleVisibility = () => {
+    setBlogFormVisible((prevValue) => !prevValue);
+  };
+  const hideWhenVisible = { display: blogFormVisible ? "none" : "" };
+  const showWhenVisible = { display: blogFormVisible ? "" : "none" };
+  const handleChange = ({ target }) => {
+    const { name, value } = target;
+    setUserData((prevData) => ({ ...prevData, [name]: value }));
+  };
 
   const handleLogin = async (event) => {
     event.preventDefault();
 
     try {
-      const user = await login({
-        username,
-        password,
-      });
+      const user = await login(userData);
       setToken(user);
       setUser(user);
-      setUsername("");
-      setPassword("");
+      setUserData({ username: "", password: "" });
     } catch (exception) {
       setNotification({ type: "error", text: "Wrong username or password" });
       setTimeout(() => {
         setNotification(null);
       }, 5000);
     }
-  };
-
-  const loginForm = () => {
-    return (
-      <form onSubmit={handleLogin}>
-        <div>
-          username
-          <input
-            type="text"
-            value={username}
-            name="Username"
-            onChange={({ target }) => setUsername(target.value)}
-          />
-        </div>
-        <div>
-          password
-          <input
-            type="password"
-            value={password}
-            name="Password"
-            onChange={({ target }) => setPassword(target.value)}
-          />
-        </div>
-        <button type="submit">login</button>
-      </form>
-    );
   };
 
   const getAllBlogs = async () => {
@@ -85,7 +66,11 @@ const App = () => {
             notification={notification}
             setNotification={setNotification}
           />
-          {loginForm()}
+          <LoginForm
+            handleChange={handleChange}
+            userData={userData}
+            handleLogin={handleLogin}
+          />
         </>
       ) : (
         <>
@@ -105,10 +90,12 @@ const App = () => {
               logout
             </button>
           </p>
-          <BlogForm
-            refreshBlogs={getAllBlogs}
-            setNotification={setNotification}
-          />
+          <Taggable buttonLabel="new note">
+            <BlogForm
+              refreshBlogs={getAllBlogs}
+              setNotification={setNotification}
+            />
+          </Taggable>
           {blogs.map((blog) => (
             <Blog key={blog.id} blog={blog} />
           ))}
