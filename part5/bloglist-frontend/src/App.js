@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Blog from "./components/Blog";
 import { getAll } from "./services/blogs";
 import { login } from "./services/login";
@@ -6,13 +6,16 @@ import { removeToken, setToken } from "./storage";
 import BlogForm from "./components/BlogForm";
 import Notification from "./components/Notification";
 import LoginForm from "./components/LoginForm";
-import Taggable from "./components/Togglable";
+import Toggleable from "./components/Toggleable";
+import { createBlog } from "./services/blogs";
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
   const [userData, setUserData] = useState({ username: "", password: "" });
   const [user, setUser] = useState(null);
   const [notification, setNotification] = useState(null);
+  const blogFormRef = useRef();
+  const noteFormRef = useRef();
 
   const handleChange = ({ target }) => {
     const { name, value } = target;
@@ -52,6 +55,17 @@ const App = () => {
     }
   }, []);
 
+  const addBlog = async (blogObject) => {
+    createBlog(blogObject).then((returnBlog) => {
+      setBlogs(blogs.concat(returnBlog));
+      blogFormRef.current.toggleVisibility();
+      setNotification({
+        type: "notification",
+        text: `Success, a new blog ${returnBlog.title} by ${returnBlog.author} added.`,
+      });
+    });
+  };
+
   return (
     <div>
       {!user ? (
@@ -85,14 +99,16 @@ const App = () => {
               logout
             </button>
           </p>
-          <Taggable buttonLabel="new note">
-            <BlogForm
-              refreshBlogs={getAllBlogs}
-              setNotification={setNotification}
-            />
-          </Taggable>
+          <Toggleable btnLabel="add blog" ref={blogFormRef}>
+            <BlogForm addBlog={addBlog} />
+          </Toggleable>
+
           {blogs.map((blog) => (
-            <Blog key={blog.id} blog={blog} />
+            <Blog
+              key={blog.id}
+              blog={blog}
+              // toggleImportance={() => toggleImportanceOf(note.id)}
+            />
           ))}
         </>
       )}
