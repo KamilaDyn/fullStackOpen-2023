@@ -61,27 +61,23 @@ blogsRouter.put("/:id", async (request, response) => {
       user: user._id,
     };
 
-    if (user.id.toString() === blog.user.toString()) {
-      if (!updateBlog.title || !updateBlog.url) {
-        response.status(400).end();
-      } else {
-        if (!blog.likes) {
-          blog.likes = 0;
-        }
-        const newBlog = await Blog.findByIdAndUpdate(
-          request.params.id,
-          updateBlog,
-          {
-            new: true,
-            runValidators: true,
-            context: "query",
-          }
-        );
-
-        response.json(newBlog);
-      }
+    if (!updateBlog.title || !updateBlog.url) {
+      response.status(400).end();
     } else {
-      return response.status(401).end();
+      if (!blog.likes) {
+        blog.likes = 0;
+      }
+      const newBlog = await Blog.findByIdAndUpdate(
+        request.params.id,
+        updateBlog,
+        {
+          new: true,
+          runValidators: true,
+          context: "query",
+        }
+      );
+
+      response.json(newBlog);
     }
   } catch (err) {
     response.status(400).send({ error: "Blog doesn't exist" });
