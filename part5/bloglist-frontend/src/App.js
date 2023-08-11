@@ -7,7 +7,7 @@ import BlogForm from "./components/BlogForm";
 import Notification from "./components/Notification";
 import LoginForm from "./components/LoginForm";
 import Toggleable from "./components/Toggleable";
-import { createBlog } from "./services/blogs";
+import { createBlog, updateBlog } from "./services/blogs";
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
@@ -55,7 +55,7 @@ const App = () => {
     }
   }, []);
 
-  const addBlog = async (blogObject) => {
+  const addBlog = (blogObject) => {
     createBlog(blogObject).then((returnBlog) => {
       setBlogs(blogs.concat(returnBlog));
       blogFormRef.current.toggleVisibility();
@@ -64,6 +64,20 @@ const App = () => {
         text: `Success, a new blog ${returnBlog.title} by ${returnBlog.author} added.`,
       });
     });
+  };
+
+  const handleLikeChange = async (blogObj) => {
+    const likedBlog = await updateBlog(blogObj.id, {
+      title: blogObj.title,
+      author: blogObj.author,
+      url: blogObj.url,
+      likes: blogObj.likes + 1,
+    });
+    setBlogs(
+      blogs.map((blog) =>
+        blog.id === likedBlog.id ? { ...blog, likes: likedBlog.likes } : blog
+      )
+    );
   };
 
   return (
@@ -107,7 +121,7 @@ const App = () => {
             <Blog
               key={blog.id}
               blog={blog}
-              // toggleImportance={() => toggleImportanceOf(note.id)}
+              handleLikeChange={handleLikeChange}
             />
           ))}
         </>

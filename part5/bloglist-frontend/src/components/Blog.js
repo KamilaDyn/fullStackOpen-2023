@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { updateBlog } from "../services/blogs";
 
 const blogStyle = {
   paddingTop: 10,
@@ -8,13 +9,14 @@ const blogStyle = {
   marginBottom: 5,
 };
 
-const Blog = ({ blog }) => {
+const Blog = ({ blog, handleLikeChange }) => {
   const { title, author, likes, url, user } = blog;
   const [visible, setVisible] = useState(false);
   const toggleVisibility = () => {
     setVisible((prevValue) => !prevValue);
   };
   const showWhenVisible = { display: visible ? "" : "none" };
+
   return (
     <div style={blogStyle}>
       <div>
@@ -25,7 +27,7 @@ const Blog = ({ blog }) => {
         <a href={url}>{url}</a>
         <p>
           likes: <span>{likes} </span>
-          <button>like</button>
+          <button onClick={() => handleLikeChange(blog)}>like</button>
         </p>
         <p>
           Added by: <span>{user.name}</span>
