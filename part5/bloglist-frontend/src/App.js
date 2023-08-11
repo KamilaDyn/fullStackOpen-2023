@@ -7,7 +7,7 @@ import BlogForm from "./components/BlogForm";
 import Notification from "./components/Notification";
 import LoginForm from "./components/LoginForm";
 import Toggleable from "./components/Toggleable";
-import { createBlog, updateBlog } from "./services/blogs";
+import { createBlog, updateBlog, deleteBlog } from "./services/blogs";
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
@@ -15,13 +15,11 @@ const App = () => {
   const [user, setUser] = useState(null);
   const [notification, setNotification] = useState(null);
   const blogFormRef = useRef();
-  const noteFormRef = useRef();
 
   const handleChange = ({ target }) => {
     const { name, value } = target;
     setUserData((prevData) => ({ ...prevData, [name]: value }));
   };
-
   const handleLogin = async (event) => {
     event.preventDefault();
 
@@ -55,15 +53,21 @@ const App = () => {
     }
   }, []);
 
-  const addBlog = (blogObject) => {
-    createBlog(blogObject).then((returnBlog) => {
-      setBlogs(blogs.concat(returnBlog));
+  const addBlog = async (blogObject) => {
+    try {
+      const newBlog = await createBlog(blogObject);
       blogFormRef.current.toggleVisibility();
       setNotification({
         type: "notification",
-        text: `Success, a new blog ${returnBlog.title} by ${returnBlog.author} added.`,
+        text: `Success, a new blog ${newBlog.title} by ${newBlog.author} added.`,
       });
-    });
+      await getAllBlogs();
+    } catch (err) {
+      setNotification({
+        type: "error",
+        text: "there was error occur",
+      });
+    }
   };
 
   const handleLikeChange = async (blogObj) => {
@@ -73,11 +77,19 @@ const App = () => {
       url: blogObj.url,
       likes: blogObj.likes + 1,
     });
-    setBlogs(
-      blogs.map((blog) =>
+    setBlogs((prevData) =>
+      prevData.map((blog) =>
         blog.id === likedBlog.id ? { ...blog, likes: likedBlog.likes } : blog
       )
     );
+  };
+  const handleBlogDelete = async (blog) => {
+    if (window.confirm(`Remove ${blog.title} by ${blog.author}?`)) {
+      await deleteBlog(blog.id);
+      setBlogs((currentBlogs) =>
+        currentBlogs.filter((currentBlog) => currentBlog.id !== blog.id)
+      );
+    }
   };
 
   return (
@@ -117,15 +129,18 @@ const App = () => {
             <BlogForm addBlog={addBlog} />
           </Toggleable>
 
-          {blogs
-            .map((blog) => (
-              <Blog
-                key={blog.id}
-                blog={blog}
-                handleLikeChange={handleLikeChange}
-              />
-            ))
-            .sort((a, b) => b.likes - a.likes)}
+          {blogs.length &&
+            blogs
+              .map((blog) => (
+                <Blog
+                  key={blog.id}
+                  blog={blog}
+                  handleLikeChange={handleLikeChange}
+                  loggedUser={user.username}
+                  handleBlogDelete={handleBlogDelete}
+                />
+              ))
+              .sort((a, b) => b.likes - a.likes)}
         </>
       )}
     </div>
