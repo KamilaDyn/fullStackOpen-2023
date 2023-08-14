@@ -1,7 +1,8 @@
-import Blog from "../components/Blog";
 import "@testing-library/jest-dom";
 import { fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import BlogForm from "../components/BlogForm";
+import Blog from "../components/Blog";
 
 test("render content with title and author", () => {
   const blog = {
@@ -91,4 +92,18 @@ test("like button is clicked twice, the event handler the component received as 
   fireEvent.click(likeBtn);
 
   expect(mockHandler.mock.calls).toHaveLength(2);
+});
+
+test("test for the new blog form", async () => {
+  const createBlog = jest.fn();
+  const user = userEvent.setup();
+  render(<BlogForm addBlog={createBlog} />);
+
+  const inputs = screen.getAllByRole("textbox");
+  await user.type(inputs[0], "testing a form...");
+  const submitBtn = screen.getByText("create");
+  await user.click(submitBtn);
+
+  expect(createBlog.mock.calls).toHaveLength(1);
+  expect(createBlog.mock.calls[0][0].title).toBe("testing a form...");
 });
