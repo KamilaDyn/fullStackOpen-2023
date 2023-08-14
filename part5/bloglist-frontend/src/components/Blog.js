@@ -21,7 +21,9 @@ const Blog = ({ blog, handleLikeChange, loggedUser, handleBlogDelete }) => {
     <div className="blog" style={blogStyle}>
       <div>
         {title} {author}{" "}
-        <button onClick={toggleVisibility}>{!visible ? "view" : "hide"}</button>
+        <button className="viewBtn" onClick={toggleVisibility}>
+          {!visible ? "view" : "hide"}
+        </button>
       </div>
       <div style={showWhenVisible}>
         <a href={url}>{url}</a>
