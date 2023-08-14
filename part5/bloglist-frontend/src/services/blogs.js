@@ -2,8 +2,8 @@ import axios from "axios";
 import baseUrl from "../config";
 import { getToken } from "../storage";
 
-const getAll = () => {
-  const request = axios.get(baseUrl.blogs);
+const getAll = async () => {
+  const request = await axios.get(baseUrl.blogs);
   return request.then((response) => response.data);
 };
 
@@ -37,5 +37,4 @@ const deleteBlog = async (id) => {
   return request.data;
 };
 
-// eslint-disable-next-line import/no-anonymous-default-export
 export { getAll, createBlog, updateBlog, deleteBlog };

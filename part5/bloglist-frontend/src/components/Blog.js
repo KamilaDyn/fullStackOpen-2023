@@ -1,4 +1,5 @@
 import { useState } from "react";
+import PropTypes from "prop-types";
 
 const blogStyle = {
   paddingTop: 10,
@@ -42,6 +43,13 @@ const Blog = ({ blog, handleLikeChange, loggedUser, handleBlogDelete }) => {
       </div>
     </div>
   );
+};
+
+Blog.propTypes = {
+  blog: PropTypes.object.isRequired,
+  handleLikeChange: PropTypes.func.isRequired,
+  loggedUser: PropTypes.string.isRequired,
+  handleBlogDelete: PropTypes.func.isRequired,
 };
 
 export default Blog;

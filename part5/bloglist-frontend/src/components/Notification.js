@@ -1,3 +1,5 @@
+import PropTypes from "prop-types";
+
 function Notification({ notification, setNotification }) {
   if (notification === null) {
     return null;
@@ -9,4 +11,8 @@ function Notification({ notification, setNotification }) {
   );
 }
 
+Notification.propTypes = {
+  notification: PropTypes.object,
+  setNotification: PropTypes.func.isRequired,
+};
 export default Notification;
