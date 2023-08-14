@@ -1,6 +1,6 @@
 import Blog from "../components/Blog";
 import "@testing-library/jest-dom";
-import { render } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 test("render content with title and author", () => {
@@ -56,4 +56,39 @@ test("checks that the blogs URL and number of likes are shown when the button is
 
   expect(blogContainer).toHaveTextContent("google.pl");
   expect(blogContainer).toHaveTextContent(9);
+});
+
+test("like button is clicked twice, the event handler the component received as props is called twice", async () => {
+  const blog = {
+    title: "Blog Title",
+    author: "Kamila",
+    url: "google.pl",
+    user: "Kamila",
+    likes: 9,
+  };
+
+  const mockHandler = jest.fn();
+
+  const loggedUser = "Kamila";
+  const handleBlogDelete = () => null;
+
+  const component = render(
+    <Blog
+      blog={blog}
+      handleLikeChange={mockHandler}
+      loggedUser={loggedUser}
+      handleBlogDelete={handleBlogDelete}
+    />
+  );
+
+  const viewBtn = component.container.querySelector(".viewBtn");
+
+  fireEvent.click(viewBtn);
+
+  const likeBtn = component.getByRole("button", { name: "like" });
+
+  fireEvent.click(likeBtn);
+  fireEvent.click(likeBtn);
+
+  expect(mockHandler.mock.calls).toHaveLength(2);
 });
