@@ -40,6 +40,7 @@ const Blog = ({ blog, handleLikeChange, loggedUser, handleBlogDelete }) => {
         )}
         {user && user.username === loggedUser && (
           <button
+            id="delete"
             style={{ backgroundColor: "red" }}
             onClick={() => handleBlogDelete(blog)}
           >

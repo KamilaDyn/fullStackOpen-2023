@@ -42,6 +42,7 @@ describe("Blog app", function () {
           "loggedBlogAppUser",
           JSON.stringify(response.body)
         );
+
         cy.visit("http://localhost:3000");
       });
     });
@@ -65,6 +66,20 @@ describe("Blog app", function () {
       cy.contains("view").click();
       cy.contains("like").click();
       cy.contains("likes:").parent().find("span").should("contain", "1");
+    });
+    it("user can delete own blog", function () {
+      cy.request("GET", "http://localhost:3003/api/blogs/");
+      cy.contains("add blog").click();
+      cy.get("#title").type("Cypress test delete");
+      cy.get("#author").type("Kamila");
+      cy.get("#url").type("google.com");
+      cy.get("#create").click();
+      cy.get("#notification").click();
+
+      cy.contains("Cypress test delete");
+      cy.contains("view").click();
+      cy.get("#delete").click();
+      cy.get("html").should("not.contain", "Cypress test delete");
     });
   });
 });

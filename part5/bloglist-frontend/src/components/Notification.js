@@ -5,7 +5,11 @@ function Notification({ notification, setNotification }) {
     return null;
   }
   return (
-    <div className={notification.type} onClick={() => setNotification(null)}>
+    <div
+      id="notification"
+      className={notification.type}
+      onClick={() => setNotification(null)}
+    >
       {notification.text}
     </div>
   );
