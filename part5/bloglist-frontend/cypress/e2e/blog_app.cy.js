@@ -55,5 +55,16 @@ describe("Blog app", function () {
       cy.get(".notification").should("have.css", "color", "rgb(0, 128, 0)");
       cy.contains("Cypress Testing");
     });
+    it("like a blog", function () {
+      cy.contains("add blog").click();
+      cy.get("#title").type("Cypress Testing");
+      cy.get("#author").type("Kamila");
+      cy.get("#url").type("google.com");
+      cy.get("#create").click();
+      cy.contains("Cypress Testing");
+      cy.contains("view").click();
+      cy.contains("like").click();
+      cy.contains("likes:").parent().find("span").should("contain", "1");
+    });
   });
 });
