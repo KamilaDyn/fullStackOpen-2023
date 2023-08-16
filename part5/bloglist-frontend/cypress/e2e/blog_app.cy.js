@@ -2,11 +2,11 @@ describe("Blog app", function () {
   beforeEach(function () {
     cy.request("POST", "http://localhost:3003/api/testing/reset");
     const user = {
-      name: "Anna",
-      username: "Anna02",
+      name: "Kamila",
+      username: "Kamila01",
       password: "test123",
     };
-    cy.request("POST", "http://localhost:3003/api/users/", user);
+    cy.request("POST", `${Cypress.env("BACKEND")}/users`, user);
 
     cy.visit("http://localhost:3000");
   });
@@ -18,10 +18,10 @@ describe("Blog app", function () {
   });
   describe("Login", function () {
     it("succeeds with correct credentials", function () {
-      cy.get("#username").type("Anna02");
+      cy.get("#username").type("Kamila01");
       cy.get("#password").type("test123");
       cy.get("#login").click();
-      cy.contains("User Anna02 is logged in");
+      cy.contains("User Kamila01 is logged in");
     });
 
     it("fails with wrong credentials", function () {
@@ -34,8 +34,8 @@ describe("Blog app", function () {
   });
   describe("When logged in", function () {
     beforeEach(function () {
-      cy.request("POST", "http://localhost:3003/api/login", {
-        username: "Anna02",
+      cy.request("POST", `${Cypress.env("BACKEND")}/login`, {
+        username: "Kamila01",
         password: "test123",
       }).then((response) => {
         localStorage.setItem(
@@ -68,7 +68,6 @@ describe("Blog app", function () {
       cy.contains("likes:").parent().find("span").should("contain", "1");
     });
     it("user can delete own blog", function () {
-      cy.request("GET", "http://localhost:3003/api/blogs/");
       cy.contains("add blog").click();
       cy.get("#title").type("Cypress test delete");
       cy.get("#author").type("Kamila");
@@ -80,6 +79,47 @@ describe("Blog app", function () {
       cy.contains("view").click();
       cy.get("#delete").click();
       cy.get("html").should("not.contain", "Cypress test delete");
+    });
+  });
+
+  describe("othe user logged", function () {
+    beforeEach(function () {
+      cy.request("POST", `${Cypress.env("BACKEND")}/login`, {
+        username: "Kamila01",
+        password: "test123",
+      }).then((response) => {
+        localStorage.setItem(
+          "loggedBlogAppUser",
+          JSON.stringify(response.body)
+        );
+
+        cy.visit("http://localhost:3000");
+      });
+      cy.addBlog({ title: "JavaScrip", author: "Kamila", url: "google.com" });
+      cy.addBlog({ title: "Python", author: "Kamila", url: "google.com" });
+      cy.addBlog({ title: "Node.js", author: "Kamila", url: "google.com" });
+      cy.contains("logout").click();
+      const user = {
+        name: "Anna",
+        username: "Anna01",
+        password: "test123",
+      };
+      cy.request("POST", `${Cypress.env("BACKEND")}/users`, user);
+      cy.request("POST", `${Cypress.env("BACKEND")}/login`, {
+        username: "Anna01",
+        password: "test123",
+      }).then((response) => {
+        localStorage.setItem(
+          "loggedBlogAppUser",
+          JSON.stringify(response.body)
+        );
+
+        cy.visit("http://localhost:3000");
+      });
+    });
+    it("creator can see the delete button of a blog, not anyone else", function () {
+      cy.contains("view").click();
+      cy.get("#delete").should("not.exist");
     });
   });
 });
