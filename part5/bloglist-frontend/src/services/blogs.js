@@ -3,8 +3,8 @@ import baseUrl from "../config";
 import { getToken } from "../storage";
 
 const getAll = async () => {
-  const request = await axios.get(baseUrl.blogs);
-  return request.then((response) => response.data);
+  const response = await axios.get(baseUrl.blogs);
+  return response.data;
 };
 
 const createBlog = async (newBlog) => {
