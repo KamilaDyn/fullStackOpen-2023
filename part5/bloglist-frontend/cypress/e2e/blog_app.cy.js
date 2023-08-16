@@ -32,4 +32,28 @@ describe("Blog app", function () {
       cy.contains("Wrong username or password");
     });
   });
+  describe("When logged in", function () {
+    beforeEach(function () {
+      cy.request("POST", "http://localhost:3003/api/login", {
+        username: "Anna02",
+        password: "test123",
+      }).then((response) => {
+        localStorage.setItem(
+          "loggedBlogAppUser",
+          JSON.stringify(response.body)
+        );
+        cy.visit("http://localhost:3000");
+      });
+    });
+
+    it("A blog can be created", function () {
+      cy.contains("add blog").click();
+      cy.get("#title").type("Cypress Testing");
+      cy.get("#author").type("Kamila");
+      cy.get("#url").type("google.com");
+      cy.get("#create").click();
+      cy.get(".notification").should("have.css", "color", "rgb(0, 128, 0)");
+      cy.contains("Cypress Testing");
+    });
+  });
 });
