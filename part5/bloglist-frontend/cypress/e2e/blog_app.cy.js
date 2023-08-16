@@ -82,7 +82,7 @@ describe("Blog app", function () {
     });
   });
 
-  describe("othe user logged", function () {
+  describe("other user logged", function () {
     beforeEach(function () {
       cy.request("POST", `${Cypress.env("BACKEND")}/login`, {
         username: "Kamila01",
@@ -120,6 +120,56 @@ describe("Blog app", function () {
     it("creator can see the delete button of a blog, not anyone else", function () {
       cy.contains("view").click();
       cy.get("#delete").should("not.exist");
+    });
+  });
+
+  describe("blogs are ordered according to likes", function () {
+    beforeEach(function () {
+      cy.login({ username: "Kamila01", password: "test123" });
+      cy.addBlog({
+        title: "Blog with 15 likes",
+        author: "Kamila",
+        url: "google.com",
+        likes: 15,
+      });
+      cy.addBlog({
+        title: "Blog with 10 likes",
+        author: "Kamila",
+        url: "google.com",
+        likes: 10,
+      });
+      cy.addBlog({
+        title: "Blog with 1 like",
+        author: "Kamila",
+        url: "google.com",
+        likes: 1,
+      });
+    });
+    it("ordered likes", function () {
+      cy.contains("Blog with 15 likes")
+        .find("button")
+        .should("contain", "view")
+        .click();
+      cy.contains("Blog with 15 likes")
+        .parent()
+        .find("span")
+        .should("contain", "15");
+      cy.contains("Blog with 10 likes")
+        .find("button")
+        .should("contain", "view")
+        .click();
+      cy.contains("Blog with 10 likes")
+        .parent()
+        .find("span")
+        .should("contain", "10");
+      cy.contains("Blog with 1 like")
+        .find("button")
+        .should("contain", "view")
+        .click();
+      cy.contains("Blog with 1 like")
+        .parent()
+        .find("span")
+        .should("contain", "1");
     });
   });
 });
