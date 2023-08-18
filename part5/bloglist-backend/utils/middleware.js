@@ -39,7 +39,6 @@ const userExtractor = async (request, response, next) => {
   next();
 };
 const errorHandler = (error, request, response, next) => {
-  console.log(error.name);
   if (error.name === "CastError") {
     response.status(400).send({ error: "malformatted id, please try again." });
   } else if (error.name === "ValidationError") {
