@@ -55,3 +55,36 @@ add validation so that the name stored in the database has to be at least three 
 </ul>
 
 <h2>My app is deployed here (front with backend) <a href='https://phonebook-5bn3.onrender.com/' target='_blank'>https://phonebook-5bn3.onrender.com/</a></h2>
+
+## PART4 Testing Express servers, user administration
+
+In this part, is focused on unit and integration tests for the backend. Implementing user authentication and authorization.
+Focus on async/ await in the backend. Error handling. Add user administration (creating users and new blog), token authorization for login.
+
+<ul>
+<li>
+bloglist -  backend project.
+Allows user to save information about blog (title, author , url and likes). (Post, put , delete request)
+Endpoint to create user and login existing one.
+</li>
+</ul>
+
+## PART5 Testing React apps
+
+Focus on frontend part. Looking at different possibilities for testing the React code. Implement token based authentication which will enable users to log in to our application. (Used backend from par4).
+
+<ul>
+<li>Bloglist - frontend
+App frontend code with connected backend from previous part. 
+Saving token in browser local storage to keep user logged in. Display all blogs after logged user. 
+Creating new blog for logged user. Delete blog just by user who  created blog, add btn to delete. 
+Testing test with jest-dom library.
+Add cypress test E2E testing. Test login with correct and wrong credentials. Check displaying remove btn just if user created it.
+
+My project app is deployed <a href='https://bloglist-l1do.onrender.com/' target='_blank'>https://bloglist-l1do.onrender.com/</a>
+API <a href='https://bloglist-l1do.onrender.com/api/users' target='_blank'>https://bloglist-l1do.onrender.com/api/users</a>
+API bligs <a href='https://bloglist-l1do.onrender.com/api/blogs' target='_blank'>https://bloglist-l1do.onrender.com/api/blogs</a>
+
+</li>
+
+</ul>
