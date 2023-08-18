@@ -81,9 +81,9 @@ Creating new blog for logged user. Delete blog just by user who  created blog, a
 Testing test with jest-dom library.
 Add cypress test E2E testing. Test login with correct and wrong credentials. Check displaying remove btn just if user created it.
 
-My project app is deployed <a href='https://bloglist-l1do.onrender.com/' target='_blank'>https://bloglist-l1do.onrender.com/</a>
-API <a href='https://bloglist-l1do.onrender.com/api/users' target='_blank'>https://bloglist-l1do.onrender.com/api/users</a>
-API bligs <a href='https://bloglist-l1do.onrender.com/api/blogs' target='_blank'>https://bloglist-l1do.onrender.com/api/blogs</a>
+My project app is deployed <a href='https://bloglist-l1do.onrender.com/' target='_blank'>https://bloglist-l1do.onrender.com/</a> </br>
+API Users <a href='https://bloglist-l1do.onrender.com/api/users' target='_blank'>https://bloglist-l1do.onrender.com/api/users</a> </br>
+API blogs <a href='https://bloglist-l1do.onrender.com/api/blogs' target='_blank'>https://bloglist-l1do.onrender.com/api/blogs</a>
 
 </li>
 
