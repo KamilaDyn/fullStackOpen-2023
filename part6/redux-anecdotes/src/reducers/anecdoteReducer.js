@@ -1,3 +1,4 @@
+import { getId } from "../utils";
 const anecdotesAtStart = [
   "If it hurts, do it more often",
   "Adding manpower to a late software project makes it later!",
@@ -6,8 +7,6 @@ const anecdotesAtStart = [
   "Premature optimization is the root of all evil.",
   "Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.",
 ];
-
-const getId = () => (100000 * Math.random()).toFixed(0);
 
 const asObject = (anecdote) => {
   return {
@@ -21,6 +20,9 @@ const initialState = anecdotesAtStart.map(asObject);
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
+    case "NEW_ANECDOTES":
+      return [...state, action.payload];
+
     case "VOTE":
       const id = action.payload;
       const updateVote = state.find((n) => n.id === id);
