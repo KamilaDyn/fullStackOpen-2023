@@ -9,12 +9,17 @@ const AnecDoteForm = () => {
     event.target.anecdote.value = "";
     dispatch(createAnecDote(content));
   };
-  <form onSubmit={addAnecDotes}>
-    <div>
-      <input name="anecdote" />
-    </div>
-    <button type="submit">create</button>
-  </form>;
+  return (
+    <>
+      <h2>create new</h2>
+      <form onSubmit={addAnecDotes}>
+        <div>
+          <input name="anecdote" />
+        </div>
+        <button type="submit">create</button>
+      </form>
+    </>
+  );
 };
 
 export default AnecDoteForm;
