@@ -2,13 +2,17 @@ import { useSelector, useDispatch } from "react-redux";
 import { voteAnecDote } from "../reducers/anecdoteReducer";
 
 const AnecdoteList = () => {
-  const anecdotes = useSelector((state) => state);
+  const anecdotes = useSelector((state) => state.anecdote);
+  const filters = useSelector((state) => state.filter);
   const dispatch = useDispatch();
 
   const vote = (id) => {
     dispatch(voteAnecDote(id));
   };
-  return anecdotes.map((anecdote) => (
+  const filteredMap = filters.length
+    ? anecdotes.filter((item) => item.content.includes(filters))
+    : anecdotes;
+  return filteredMap.map((anecdote) => (
     <div key={anecdote.id}>
       <div>{anecdote.content}</div>
       <div>
