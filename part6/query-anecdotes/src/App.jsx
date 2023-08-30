@@ -1,18 +1,11 @@
 import AnecdoteForm from "./components/AnecdoteForm";
 import Notification from "./components/Notification";
-import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
-
-const urlBase = "http://localhost:3001/anedotes";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { createAnecdote, getAnecdotes } from "./requests";
 
 const App = () => {
   const handleVote = (anecdote) => {
     console.log("vote");
-  };
-
-  const getAnecdotes = async () => {
-    const response = await axios.get(urlBase);
-    return response.data;
   };
 
   const { status, data } = useQuery({
