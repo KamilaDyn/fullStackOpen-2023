@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from "react-redux";
-import { voteAnecDote } from "../reducers/anecdoteReducer";
+import { updateAnecdoteVote, voteAnecDote } from "../reducers/anecdoteReducer";
 import {
   hideNotification,
   newNotification,
@@ -15,7 +15,7 @@ const AnecdoteList = () => {
     }, 5000);
   };
   const vote = (anecdote) => {
-    dispatch(voteAnecDote(anecdote.id));
+    dispatch(updateAnecdoteVote(anecdote.id));
     setNotification(anecdote.content);
   };
   const filteredMap = filters.length
