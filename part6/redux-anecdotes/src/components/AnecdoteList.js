@@ -19,9 +19,9 @@ const AnecdoteList = () => {
     setNotification(anecdote.content);
   };
   const filteredMap = filters.length
-    ? anecdotes.filter((item) => item.content.includes(filters))
+    ? anecdotes?.filter((item) => item.content.includes(filters))
     : anecdotes;
-  return filteredMap.map((anecdote) => (
+  return filteredMap?.map((anecdote) => (
     <div key={anecdote.id}>
       <div>{anecdote.content}</div>
       <div>
