@@ -1,11 +1,12 @@
 import { createContext, useReducer, useContext } from "react";
 
 const notificationReducer = (state, action) => {
-  console.log(state);
   switch (action.type) {
     case "VOTED_ANECDOTE":
       return action.payload;
     case "CREATE_ANECDOTE":
+      return action.payload;
+    case "CREATE_ANECDOTE_ERROR":
       return action.payload;
     case "HIDE_ERROR":
       return null;

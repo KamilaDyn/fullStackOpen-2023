@@ -1,15 +1,9 @@
-import {
-  QueryClient,
-  useMutation,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { createAnecdote } from "../requests";
-import { useState } from "react";
 import { useNotification } from "../NotificationContext";
 
 const AnecdoteForm = () => {
-  const [validate, setValidate] = useState("");
   const setNotification = useNotification();
 
   const queryClient = useQueryClient();
@@ -17,19 +11,30 @@ const AnecdoteForm = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["anecdotes"] });
     },
+    onError: (error) => {
+      setNotification(
+        "CREATE_ANECDOTE_ERROR",
+        "An error occurred while creating the anecdote",
+        5
+      );
+    },
   });
-
-  const onCreate = (event) => {
+  const onCreate = async (event) => {
     event.preventDefault();
     const content = event.target.anecdote.value;
+    event.target.anecdote.value = "";
 
-    if (content.length > 5) {
-      event.target.anecdote.value = "";
-      newAnecdoteMutation.mutate({ content: content, votes: 0 });
-      setNotification("CREATE_ANECDOTE", `Added new ${content}`, 5);
-      setValidate("");
+    if (content.length < 5) {
+      setNotification(
+        "CREATE_ANECDOTE_ERROR",
+        "To short anecode, must have length 5 or more",
+        5
+      );
     } else {
-      setValidate("new content must be min 5 characters length");
+      newAnecdoteMutation.mutate({
+        content: content,
+        votes: 0,
+      });
     }
   };
 
@@ -39,7 +44,6 @@ const AnecdoteForm = () => {
       <form onSubmit={onCreate}>
         <input name="anecdote" />
         <button type="submit">create</button>
-        {!!validate.length && <p>{validate}</p>}
       </form>
     </div>
   );
