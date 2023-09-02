@@ -88,3 +88,21 @@ API blogs <a href='https://bloglist-l1do.onrender.com/api/blogs' target='_blank'
 </li>
 
 </ul>
+
+## PART6 Advanced state management
+
+This part is focus on Redux, Context, useQuery, which can be used for more complex state management of React app.
+This chapter covers how to useRedux with hooks, and create global context for application.
+
+<ul>
+<li><a href='https://github.com/KamilaDyn/fullStackOpen-2023/tree/master/part6/unicafe-redux'>unicafe-redux:</a>
+App that handle the state management with Redux. It was used Redux library. Implementing reducer to score opinion by click button.
+ </li>
+ <li><a href='https://github.com/KamilaDyn/fullStackOpen-2023/tree/master/part6/redux-anecdotes'>redux anecdotes: </a> Voting application , displaying content of blogs and buttons to blog. Also contain field to create new content. State is created with configureStore, used new version of redux, redux toolkit. Created many reducers, for anecdote , filter  and for notifications. </li>
+<li>
+<a href='https://github.com/KamilaDyn/fullStackOpen-2023/tree/master/part6/query-anecdotes'>query-anecdotes: </a>
+Use react-query library to stre manage data retrieved from the server. 
+Use query  to get data from server , and useMutation to mutate data. Create Context to display notification after voted or created anecdote.   
+</li>
+
+</ul>
