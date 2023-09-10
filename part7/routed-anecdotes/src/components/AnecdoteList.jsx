@@ -1,7 +1,11 @@
 import { Link } from "react-router-dom";
+const padding = {
+  paddingBottom: 5,
+};
 
-const AnecdoteList = ({ anecdotes }) => (
+const AnecdoteList = ({ anecdotes, notification }) => (
   <div>
+    {notification && <p style={padding}>{notification}</p>}
     <h2>Anecdotes</h2>
     <ul>
       {anecdotes.map((anecdote) => (
