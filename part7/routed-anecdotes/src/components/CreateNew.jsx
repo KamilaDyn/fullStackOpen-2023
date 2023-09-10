@@ -1,7 +1,7 @@
 import { useField } from "../hooks";
 
 const CreateNew = ({ addNew }) => {
-  const { onChange, anecdote, handleSubmit } = useField(addNew);
+  const { onChange, anecdote, handleSubmit, cleanForm } = useField(addNew);
   const { content, info, author } = anecdote;
   return (
     <div>
@@ -19,7 +19,10 @@ const CreateNew = ({ addNew }) => {
           url for more info
           <input name="info" value={info} onChange={onChange} />
         </div>
-        <button>create</button>
+        <button type="submit">create</button>
+        <button type="button" onClick={cleanForm} style={{ marginLeft: "5px" }}>
+          reset
+        </button>
       </form>
     </div>
   );

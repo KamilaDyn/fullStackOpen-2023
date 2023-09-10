@@ -24,10 +24,19 @@ export const useField = (addNew) => {
     });
     navigate("/");
   };
+
+  const cleanForm = () => {
+    setAnecdote({
+      content: "",
+      author: "",
+      info: "",
+    });
+  };
   return {
     handleSubmit,
     onChange,
     anecdote,
+    cleanForm,
   };
 };
 
