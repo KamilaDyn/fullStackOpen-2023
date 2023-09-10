@@ -1,10 +1,16 @@
 import { useState } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useParams,
+} from "react-router-dom";
 import Menu from "./components/Menu";
 import AnecdoteList from "./components/AnecdoteList";
 import About from "./components/About";
 import CreateNew from "./components/CreateNew";
 import Footer from "./components/Footer";
+import SingleAnecDote from "./components/SingleAnecdote";
 
 const App = () => {
   const [anecdotes, setAnecdotes] = useState([
@@ -25,7 +31,6 @@ const App = () => {
   ]);
 
   const [notification, setNotification] = useState("");
-
   const addNew = (anecdote) => {
     anecdote.id = Math.round(Math.random() * 10000);
     setAnecdotes(anecdotes.concat(anecdote));
@@ -43,7 +48,6 @@ const App = () => {
 
     setAnecdotes(anecdotes.map((a) => (a.id === id ? voted : a)));
   };
-
   return (
     <div>
       <h1>Software anecdotes</h1>
@@ -53,6 +57,10 @@ const App = () => {
           <Route path="/" element={<AnecdoteList anecdotes={anecdotes} />} />
           <Route path="/create" element={<CreateNew addNew={addNew} />} />
           <Route path="/about" element={<About />} />
+          <Route
+            path="/anecdotes/:id"
+            element={<SingleAnecDote anecdotes={anecdotes} />}
+          />
         </Routes>
         <Footer />
       </Router>
