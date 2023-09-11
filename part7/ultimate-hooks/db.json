@@ -1,0 +1,42 @@
+{
+  "notes": [
+    {
+      "content": "custom hooks are easy :)",
+      "id": 1
+    },
+    {
+      "content": "javascript is super ",
+      "id": 2
+    },
+    {
+      "content": "",
+      "id": 3
+    },
+    {
+      "content": "java vs javascript?",
+      "id": 4
+    }
+  ],
+  "persons": [
+    {
+      "name": "mluukkai",
+      "number": "040-5483923",
+      "id": 1
+    },
+    {
+      "name": "Kamila",
+      "number": "092-1234567",
+      "id": 2
+    },
+    {
+      "name": "Anna ",
+      "number": "092-02902992",
+      "id": 3
+    },
+    {
+      "name": "",
+      "number": "",
+      "id": 4
+    }
+  ]
+}
