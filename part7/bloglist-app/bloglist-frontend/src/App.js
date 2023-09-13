@@ -1,21 +1,21 @@
 import { useState, useEffect, useRef } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import Blog from './components/Blog'
-import { getAll } from './services/blogs'
-import { login } from './services/login'
-import { removeToken, setToken } from './storage'
+import { removeToken } from './storage'
 import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
 import Toggleable from './components/Toggleable'
-import { createBlog, updateBlog, deleteBlog } from './services/blogs'
+import { updateBlog, deleteBlog } from './services/blogs'
 import { setNotification } from './reducers/notificationReducers'
+import { createNewBlog, setBlogs } from './reducers/blogReducer'
+import { setLoggedUser, setLoginUser } from './reducers/loginReducer'
 
 const App = () => {
-  const [blogs, setBlogs] = useState([])
-  const [userData, setUserData] = useState({ username: '', password: '' })
-  const [user, setUser] = useState(null)
   const dispatch = useDispatch()
+  const blogs = useSelector((state) => state.blogs)
+  const user = useSelector((state) => state.user)
+  const [userData, setUserData] = useState({ username: '', password: '' })
   const blogFormRef = useRef()
 
   const handleChange = ({ target }) => {
@@ -26,9 +26,7 @@ const App = () => {
     event.preventDefault()
 
     try {
-      const user = await login(userData)
-      setToken(user)
-      setUser(user)
+      dispatch(setLoginUser(userData))
       setUserData({ username: '', password: '' })
     } catch (exception) {
       dispatch(
@@ -43,37 +41,34 @@ const App = () => {
     }
   }
 
-  const getAllBlogs = async () => {
-    const blogs = await getAll()
-    setBlogs(blogs)
-  }
-
   useEffect(() => {
-    getAllBlogs()
-  }, [])
+    if (user) {
+      dispatch(setBlogs())
+    }
+  }, [user])
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
-      setUser(user)
+      dispatch(setLoggedUser(user))
     }
   }, [])
 
   const addBlog = async (blogObject) => {
     try {
-      const newBlog = await createBlog(blogObject)
+      dispatch(createNewBlog(blogObject))
       blogFormRef.current.toggleVisibility()
       dispatch(
         setNotification(
           {
             type: 'notification',
-            text: `Success, a new blog ${newBlog.title} by ${newBlog.author} added.`,
+            text: `Success, a new blog ${blogObject.title} by ${blogObject.author} added.`,
           },
           5,
         ),
       )
-      await getAllBlogs()
+      dispatch(setBlogs())
     } catch (err) {
       dispatch(
         setNotification(
@@ -103,9 +98,9 @@ const App = () => {
   const handleBlogDelete = async (blog) => {
     if (window.confirm(`Remove ${blog.title} by ${blog.author}?`)) {
       await deleteBlog(blog.id)
-      setBlogs((currentBlogs) =>
-        currentBlogs.filter((currentBlog) => currentBlog.id !== blog.id),
-      )
+      // setBlogs((currentBlogs) =>
+      //   currentBlogs.filter((currentBlog) => currentBlog.id !== blog.id),
+      // )
       dispatch(
         setNotification(
           {
@@ -123,6 +118,7 @@ const App = () => {
       {!user ? (
         <>
           <h2> Log in to application</h2>
+          <div>Example login data: Kami01 test123</div>
           <Notification />
           <LoginForm
             handleChange={handleChange}
@@ -139,7 +135,7 @@ const App = () => {
             <button
               onClick={() => {
                 removeToken()
-                setUser(null)
+                dispatch(setLoggedUser(null))
               }}
             >
               logout

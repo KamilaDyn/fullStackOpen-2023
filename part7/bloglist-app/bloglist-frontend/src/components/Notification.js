@@ -4,7 +4,6 @@ import { setNotification } from '../reducers/notificationReducers'
 function Notification() {
   const notification = useSelector((state) => state.notification)
   const dispatch = useDispatch()
-  console.log(notification)
   if (notification === null) {
     return null
   }
