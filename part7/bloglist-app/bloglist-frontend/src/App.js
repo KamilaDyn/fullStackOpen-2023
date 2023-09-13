@@ -6,7 +6,7 @@ import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
 import Toggleable from './components/Toggleable'
-import { updateBlog, deleteBlog } from './services/blogs'
+import { deleteBlog } from './services/blogs'
 import { setNotification } from './reducers/notificationReducers'
 import { createNewBlog, setBlogs } from './reducers/blogReducer'
 import { setLoggedUser, setLoginUser } from './reducers/loginReducer'
@@ -82,19 +82,6 @@ const App = () => {
     }
   }
 
-  const handleLikeChange = async (blogObj) => {
-    const likedBlog = await updateBlog(blogObj.id, {
-      title: blogObj.title,
-      author: blogObj.author,
-      url: blogObj.url,
-      likes: blogObj.likes + 1,
-    })
-    setBlogs((prevData) =>
-      prevData.map((blog) =>
-        blog.id === likedBlog.id ? { ...blog, likes: likedBlog.likes } : blog,
-      ),
-    )
-  }
   const handleBlogDelete = async (blog) => {
     if (window.confirm(`Remove ${blog.title} by ${blog.author}?`)) {
       await deleteBlog(blog.id)
@@ -151,8 +138,6 @@ const App = () => {
                 <Blog
                   key={blog.id}
                   blog={blog}
-                  handleLikeChange={handleLikeChange}
-                  loggedUser={user.username}
                   handleBlogDelete={handleBlogDelete}
                 />
               ))
