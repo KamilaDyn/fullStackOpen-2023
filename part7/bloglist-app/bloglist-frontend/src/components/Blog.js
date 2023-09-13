@@ -2,6 +2,7 @@ import { useState } from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
 import { removeSingleBlog, updateLikeBlog } from '../reducers/blogReducer'
+import { setNotification } from '../reducers/notificationReducers'
 
 const blogStyle = {
   paddingTop: 10,
@@ -19,8 +20,22 @@ const Blog = ({ blog }) => {
   const toggleVisibility = () => {
     setVisible((prevValue) => !prevValue)
   }
+  // console.log(blog, loggedUser)
   const showWhenVisible = { display: visible ? '' : 'none' }
-
+  const handleBlogDelete = async (blog) => {
+    if (window.confirm(`Remove ${blog.title} by ${blog.author}?`)) {
+      dispatch(removeSingleBlog(blog.id))
+      dispatch(
+        setNotification(
+          {
+            type: 'notification',
+            text: `Success, a blog ${blog.title} was removed.`,
+          },
+          5,
+        ),
+      )
+    }
+  }
   return (
     <div className="blog" style={blogStyle}>
       <div>
@@ -42,11 +57,11 @@ const Blog = ({ blog }) => {
             Added by: <span>{user.name}</span>
           </p>
         )}
-        {user && user.username === loggedUser.username && (
+        {user && user.name === loggedUser.name && (
           <button
             id="delete"
             style={{ backgroundColor: 'red' }}
-            onClick={() => dispatch(removeSingleBlog(blog.id))}
+            onClick={() => handleBlogDelete(blog)}
           >
             Remove
           </button>

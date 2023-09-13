@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { createBlog, getAll, updateBlog, deleteBlog } from '../services/blogs'
+import { setNotification } from './notificationReducers'
 
 const initialState = []
 
@@ -11,7 +12,7 @@ const blogSlice = createSlice({
       return action.payload
     },
     appendBlog(state, action) {
-      return state.push(action.payload)
+      state.push(action.payload)
     },
     likeBlog(state, action) {
       return state.map((blog) =>
@@ -37,8 +38,31 @@ export const setBlogs = () => {
 
 export const createNewBlog = (content) => {
   return async (dispatch) => {
-    const newBlog = await createBlog(content)
-    dispatch(appendBlog(newBlog))
+    createBlog(content)
+      .then((response) => {
+        dispatch(appendBlog(response))
+        dispatch(
+          setNotification(
+            {
+              type: 'notification',
+              text: `Success, a new blog ${response.title} by ${response.author} added.`,
+            },
+            5,
+          ),
+        )
+        dispatch(setBlogs())
+      })
+      .catch(() =>
+        dispatch(
+          setNotification(
+            {
+              type: 'error',
+              text: 'could not add blog, please try later',
+            },
+            5,
+          ),
+        ),
+      )
   }
 }
 

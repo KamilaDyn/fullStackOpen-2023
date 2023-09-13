@@ -28,7 +28,6 @@ export const setLoggedUser = (userData) => {
 export const setLoginUser = (userData) => {
   return async (dispatch) => {
     const user = await login(userData)
-    console.log(userData, user)
     setToken(user)
     dispatch(loginUser(user))
   }
