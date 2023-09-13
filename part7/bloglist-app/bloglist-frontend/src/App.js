@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import { useDispatch } from 'react-redux'
 import Blog from './components/Blog'
 import { getAll } from './services/blogs'
 import { login } from './services/login'
@@ -8,12 +9,13 @@ import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
 import Toggleable from './components/Toggleable'
 import { createBlog, updateBlog, deleteBlog } from './services/blogs'
+import { setNotification } from './reducers/notificationReducers'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [userData, setUserData] = useState({ username: '', password: '' })
   const [user, setUser] = useState(null)
-  const [notification, setNotification] = useState(null)
+  const dispatch = useDispatch()
   const blogFormRef = useRef()
 
   const handleChange = ({ target }) => {
@@ -29,10 +31,15 @@ const App = () => {
       setUser(user)
       setUserData({ username: '', password: '' })
     } catch (exception) {
-      setNotification({ type: 'error', text: 'Wrong username or password' })
+      dispatch(
+        setNotification(
+          { type: 'error', text: 'Wrong username or password' },
+          5,
+        ),
+      )
       setTimeout(() => {
         setNotification(null)
-      }, 5000)
+      }, 5)
     }
   }
 
@@ -57,16 +64,26 @@ const App = () => {
     try {
       const newBlog = await createBlog(blogObject)
       blogFormRef.current.toggleVisibility()
-      setNotification({
-        type: 'notification',
-        text: `Success, a new blog ${newBlog.title} by ${newBlog.author} added.`,
-      })
+      dispatch(
+        setNotification(
+          {
+            type: 'notification',
+            text: `Success, a new blog ${newBlog.title} by ${newBlog.author} added.`,
+          },
+          5,
+        ),
+      )
       await getAllBlogs()
     } catch (err) {
-      setNotification({
-        type: 'error',
-        text: 'there was error occur',
-      })
+      dispatch(
+        setNotification(
+          {
+            type: 'error',
+            text: 'there was error occur',
+          },
+          5,
+        ),
+      )
     }
   }
 
@@ -89,6 +106,15 @@ const App = () => {
       setBlogs((currentBlogs) =>
         currentBlogs.filter((currentBlog) => currentBlog.id !== blog.id),
       )
+      dispatch(
+        setNotification(
+          {
+            type: 'notification',
+            text: `Success, a blog ${blog.title} was removed.`,
+          },
+          5,
+        ),
+      )
     }
   }
 
@@ -97,10 +123,7 @@ const App = () => {
       {!user ? (
         <>
           <h2> Log in to application</h2>
-          <Notification
-            notification={notification}
-            setNotification={setNotification}
-          />
+          <Notification />
           <LoginForm
             handleChange={handleChange}
             userData={userData}
@@ -110,10 +133,7 @@ const App = () => {
       ) : (
         <>
           <h2>blogs</h2>
-          <Notification
-            notification={notification}
-            setNotification={setNotification}
-          />
+          <Notification />
           <p>
             User {user.username} is logged in. You can{' '}
             <button

@@ -1,6 +1,10 @@
-import PropTypes from 'prop-types'
+import { useSelector, useDispatch } from 'react-redux'
+import { setNotification } from '../reducers/notificationReducers'
 
-function Notification({ notification, setNotification }) {
+function Notification() {
+  const notification = useSelector((state) => state.notification)
+  const dispatch = useDispatch()
+  console.log(notification)
   if (notification === null) {
     return null
   }
@@ -8,15 +12,11 @@ function Notification({ notification, setNotification }) {
     <div
       id="notification"
       className={notification.type}
-      onClick={() => setNotification(null)}
+      onClick={() => dispatch(setNotification(null))}
     >
       {notification.text}
     </div>
   )
 }
 
-Notification.propTypes = {
-  notification: PropTypes.object,
-  setNotification: PropTypes.func.isRequired,
-}
 export default Notification
