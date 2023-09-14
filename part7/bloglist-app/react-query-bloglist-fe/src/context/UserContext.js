@@ -1,6 +1,7 @@
 import { createContext, useReducer, useContext } from 'react'
 import { login } from '../services/login'
 import { setToken } from '../storage'
+import { useNotification } from './NotificationContext'
 
 export const UserContext = createContext()
 
@@ -20,9 +21,6 @@ const userReducer = (state, action) => {
 export const UserContextProvider = ({ children }) => {
   const [user, userDispatch] = useReducer(userReducer, null)
 
-  //   const value = {
-  //     user: user.user,
-  //   }
   return (
     <UserContext.Provider value={[user, userDispatch]}>
       {children}
@@ -42,10 +40,19 @@ export const useUserValue = () => {
 
 export const useLoginUser = () => {
   const dispatch = useUserDispatch()
-  const setUser = async (userData) => {
-    const user = await login(userData)
-    setToken(user)
-    dispatch({ type: 'LOGIN_USER', payload: user })
+  const setNotification = useNotification()
+  const setUser = (userData) => {
+    const user = login(userData)
+      .then((response) => {
+        setToken(user)
+        dispatch({ type: 'LOGIN_USER', payload: response })
+      })
+      .catch(() =>
+        setNotification(
+          { type: 'error', text: 'Wrong username or password' },
+          5,
+        ),
+      )
   }
   return setUser
 }

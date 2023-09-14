@@ -1,5 +1,8 @@
+import { useNotificationValue } from '../context/NotificationContext'
+
 function Notification() {
-  const notification = null
+  const notification = useNotificationValue()
+  console.log(notification)
   if (notification === null) {
     return null
   }

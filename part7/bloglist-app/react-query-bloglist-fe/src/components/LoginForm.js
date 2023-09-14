@@ -9,22 +9,7 @@ const LoginForm = ({ setUserData, userData }) => {
   }
   const handleLogin = (event) => {
     event.preventDefault()
-
-    try {
-      setUser(userData)
-      // dispatch(setLoginUser(userData))
-      setUserData({ username: '', password: '' })
-    } catch (exception) {
-      // dispatch(
-      //   setNotification(
-      //     { type: 'error', text: 'Wrong username or password' },
-      //     5,
-      //   ),
-      // )
-      // setTimeout(() => {
-      //   setNotification(null)
-      // }, 5)
-    }
+    setUser(userData)
   }
   return (
     <form onSubmit={handleLogin}>
