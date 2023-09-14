@@ -6,13 +6,12 @@ import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
 import Toggleable from './components/Toggleable'
 import { useUserDispatch, useUserValue } from './context/UserContext'
-import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import { getAll } from './services/blogs'
 
 const App = () => {
   const user = useUserValue()
   const dispatch = useUserDispatch()
-  const queryClient = useQueryClient()
   const [userData, setUserData] = useState({ username: '', password: '' })
   const blogFormRef = useRef()
 

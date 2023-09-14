@@ -20,7 +20,6 @@ const Blog = ({ blog }) => {
   const toggleVisibility = () => {
     setVisible((prevValue) => !prevValue)
   }
-  // console.log(blog, loggedUser)
   const showWhenVisible = { display: visible ? '' : 'none' }
   const handleBlogDelete = async (blog) => {
     if (window.confirm(`Remove ${blog.title} by ${blog.author}?`)) {
