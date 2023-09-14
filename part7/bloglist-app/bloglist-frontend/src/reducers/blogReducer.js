@@ -37,7 +37,7 @@ export const setBlogs = () => {
 }
 
 export const createNewBlog = (content) => {
-  return async (dispatch) => {
+  return (dispatch) => {
     createBlog(content)
       .then((response) => {
         dispatch(appendBlog(response))

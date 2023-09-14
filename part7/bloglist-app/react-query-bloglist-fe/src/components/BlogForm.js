@@ -1,5 +1,8 @@
 import { useState } from 'react'
 import PropTypes from 'prop-types'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { createBlog } from '../services/blogs'
+import { useNotification } from '../context/NotificationContext'
 
 const initialBlog = {
   title: '',
@@ -8,21 +11,37 @@ const initialBlog = {
 }
 const BlogForm = ({ blogFormRef }) => {
   const [blogData, setBlogData] = useState(initialBlog)
+  const queryClient = useQueryClient()
+  const setNotification = useNotification()
+
   const { title, author, url } = blogData
   const handleChange = (event) => {
     const { name, value } = event.target
     setBlogData((prevData) => ({ ...prevData, [name]: value }))
   }
+  const newBlogMutation = useMutation(createBlog, {
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['blogs'] })
+    },
+    onError: () => {
+      setNotification(
+        {
+          type: 'error',
+          text: 'could not add blog, please try later',
+        },
+        5,
+      )
+    },
+  })
 
   const handleSubmit = (e) => {
     e.preventDefault()
     if (blogData.author && blogData.title && blogData.url) {
-      // dispatch(setNotification(null))
+      newBlogMutation.mutate({ ...blogData })
       blogFormRef.current.toggleVisibility()
-      // dispatch(createNewBlog(blogData))
       setBlogData(initialBlog)
     } else {
-      // dispatch(setNotification({ type: 'error', text: 'fill all fields' }, 5))
+      setNotification({ type: 'error', text: 'fill all fields' }, 5)
     }
   }
   return (

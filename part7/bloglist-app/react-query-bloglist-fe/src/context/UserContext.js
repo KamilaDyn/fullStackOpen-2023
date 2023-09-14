@@ -42,9 +42,9 @@ export const useLoginUser = () => {
   const dispatch = useUserDispatch()
   const setNotification = useNotification()
   const setUser = (userData) => {
-    const user = login(userData)
+    login(userData)
       .then((response) => {
-        setToken(user)
+        setToken(response)
         dispatch({ type: 'LOGIN_USER', payload: response })
       })
       .catch(() =>
