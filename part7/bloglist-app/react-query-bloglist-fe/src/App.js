@@ -5,6 +5,7 @@ import Home from './pages/Home'
 import Users from './pages/Users'
 import { Header } from './components'
 import SingleUser from './pages/SingleUser'
+import Blog from './pages/Blog'
 
 const App = () => {
   const dispatch = useUserDispatch()
@@ -23,6 +24,7 @@ const App = () => {
         <Route path="/" element={<Home />} />
         <Route path="/users" element={<Users />} />
         <Route path="/users/:id" element={<SingleUser />} />
+        <Route path="/blogs/:id" element={<Blog />} />
       </Routes>
     </Router>
   )
