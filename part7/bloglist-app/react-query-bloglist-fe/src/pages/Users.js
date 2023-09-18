@@ -1,13 +1,7 @@
-import { useQuery } from '@tanstack/react-query'
-import { getAllUsers } from '../services/users'
-
+import { useGetUsers } from '../hooks'
+import { Link } from 'react-router-dom'
 const Users = () => {
-  const { status, data: users } = useQuery({
-    queryKey: ['users'],
-    queryFn: getAllUsers,
-    retry: 1,
-  })
-
+  const { status, users } = useGetUsers()
   if (status === 'loading') {
     return <p>loading</p>
   }
@@ -22,10 +16,12 @@ const Users = () => {
           </tr>
         </thead>
         <tbody>
-          {users.map((user) => (
-            <tr key={user.id}>
-              <td>{user.name}</td>
-              <td>{user.blogs.length}</td>
+          {users.map(({ id, blogs, name }) => (
+            <tr key={id}>
+              <td>
+                <Link to={`/users/${id}`}>{name}</Link>
+              </td>
+              <td>{blogs.length}</td>
             </tr>
           ))}
         </tbody>

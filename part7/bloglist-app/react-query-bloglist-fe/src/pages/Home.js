@@ -2,18 +2,13 @@ import { useEffect, useRef } from 'react'
 import { Blog, BlogForm, Toggleable } from '../components'
 
 import { useUserDispatch, useUserValue } from '../context/UserContext'
-import { useQuery } from '@tanstack/react-query'
-import { getAll } from '../services/blogs'
+
+import { useGetBlogs } from '../hooks/useGetBlogs'
 const Home = () => {
   const user = useUserValue()
   const dispatch = useUserDispatch()
   const blogFormRef = useRef()
-
-  const { status, data: blogs } = useQuery({
-    queryKey: ['blogs'],
-    queryFn: getAll,
-    retry: 1,
-  })
+  const { status, blogs } = useGetBlogs()
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
