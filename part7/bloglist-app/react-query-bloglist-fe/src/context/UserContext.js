@@ -2,6 +2,7 @@ import { createContext, useReducer, useContext } from 'react'
 import { login } from '../services/login'
 import { setToken } from '../storage'
 import { useNotification } from './NotificationContext'
+import { useNavigate } from 'react-router-dom'
 
 export const UserContext = createContext()
 
@@ -41,11 +42,13 @@ export const useUserValue = () => {
 export const useLoginUser = () => {
   const dispatch = useUserDispatch()
   const setNotification = useNotification()
+  const navigate = useNavigate()
   const setUser = (userData) => {
     login(userData)
       .then((response) => {
         setToken(response)
         dispatch({ type: 'LOGIN_USER', payload: response })
+        navigate('/')
       })
       .catch(() =>
         setNotification(

@@ -1,11 +1,10 @@
 import { useEffect, useRef } from 'react'
-import { Blog, BlogForm, Toggleable } from '../components'
+import { Blog, BlogForm, Header, Toggleable } from '../components'
 
-import { useUserDispatch, useUserValue } from '../context/UserContext'
+import { useUserDispatch } from '../context/UserContext'
 
 import { useGetBlogs } from '../hooks/useGetBlogs'
 const Home = () => {
-  const user = useUserValue()
   const dispatch = useUserDispatch()
   const blogFormRef = useRef()
   const { status, blogs } = useGetBlogs()
@@ -18,11 +17,9 @@ const Home = () => {
     }
   }, [])
 
-  if (!user) {
-    return null
-  }
   return (
     <div>
+      <Header>Blogs</Header>
       <>
         <Toggleable btnLabel="add blog" ref={blogFormRef}>
           <BlogForm blogFormRef={blogFormRef} />

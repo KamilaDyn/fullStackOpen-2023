@@ -2,7 +2,7 @@ import { Notification, LoginForm } from '../components'
 import { useUserDispatch, useUserValue } from '../context/UserContext'
 import { removeToken } from '../storage'
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import Menu from './Menu'
 
 const styles = {
   padding: {
@@ -10,53 +10,18 @@ const styles = {
   },
   flex: {
     display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
     alignItems: 'center',
+    width: '100%',
+    height: '100vh',
   },
 }
-const Menu = () => {
-  return (
-    <div>
-      <Link style={styles.padding} to="/">
-        Blogs
-      </Link>
-      <Link style={styles.padding} to="/users">
-        Users
-      </Link>
-    </div>
-  )
-}
 
-const Header = () => {
-  const dispatch = useUserDispatch()
-  const [userData, setUserData] = useState({ username: '', password: '' })
-  const user = useUserValue()
-  if (!user) {
-    return (
-      <>
-        <h2> Log in to application</h2>
-        <div>Example login data: Kami01 test123</div>
-        <Notification />
-        <LoginForm userData={userData} setUserData={setUserData} />
-      </>
-    )
-  }
-
+const Header = ({ children }) => {
   return (
     <>
-      <div style={styles.flex}>
-        <Menu />
-
-        <p> {user.username} logged in.</p>
-        <button
-          onClick={() => {
-            removeToken()
-            dispatch({ type: 'LOG_OUT' })
-          }}
-        >
-          logout
-        </button>
-      </div>
-      <h2>blogs</h2>
+      <h2 className="text-primary text-center pt-3 pb-5">{children}</h2>
       <Notification />
     </>
   )

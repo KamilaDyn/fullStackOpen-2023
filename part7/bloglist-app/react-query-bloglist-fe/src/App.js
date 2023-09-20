@@ -3,9 +3,10 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { useUserDispatch } from './context/UserContext'
 import Home from './pages/Home'
 import Users from './pages/Users'
-import { Header } from './components'
 import SingleUser from './pages/SingleUser'
 import Blog from './pages/Blog'
+import ProtectedRoute from './components/ProtectRoute'
+import Login from './pages/Login'
 
 const App = () => {
   const dispatch = useUserDispatch()
@@ -19,12 +20,40 @@ const App = () => {
 
   return (
     <Router>
-      <Header />
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/users" element={<Users />} />
-        <Route path="/users/:id" element={<SingleUser />} />
-        <Route path="/blogs/:id" element={<Blog />} />
+        <Route path="/login" element={<Login />} />
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute>
+              <Home />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/users"
+          element={
+            <ProtectedRoute>
+              <Users />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/users/:id"
+          element={
+            <ProtectedRoute>
+              <SingleUser />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/blogs/:id"
+          element={
+            <ProtectedRoute>
+              <Blog />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </Router>
   )
