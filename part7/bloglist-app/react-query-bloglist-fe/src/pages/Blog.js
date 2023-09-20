@@ -1,6 +1,8 @@
 import { useParams } from 'react-router-dom'
 import { useGetBlogs, useUpdateBlog } from '../hooks'
 import { useUserValue } from '../context/UserContext'
+import Comments from '../components/Comments'
+
 const Blog = () => {
   const { id } = useParams()
   const { blogs, status } = useGetBlogs()
@@ -39,6 +41,7 @@ const Blog = () => {
           Remove
         </button>
       )}
+      <Comments blogId={blog.id} />
     </>
   )
 }
