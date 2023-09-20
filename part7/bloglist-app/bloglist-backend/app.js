@@ -7,6 +7,7 @@ const blogsRouter = require('./controllers/blogs')
 const mongoose = require('mongoose')
 const usersRouter = require('./controllers/users')
 const loginRouter = require('./controllers/loginin')
+const commentRouter = require('./controllers/comments')
 const app = express()
 
 mongoose
@@ -26,6 +27,7 @@ app.use(middleware.tokenExtractor)
 app.use('/api/users', usersRouter)
 app.use('/api/login', loginRouter)
 app.use('/api/blogs', middleware.userExtractor, blogsRouter)
+app.use('/api/blogs', commentRouter)
 
 if (process.env.NODE_ENV === 'test') {
   const testingRouter = require('./controllers/testing')
