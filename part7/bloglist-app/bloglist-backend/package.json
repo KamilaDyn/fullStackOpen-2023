@@ -8,7 +8,7 @@
     "dev": "cross-env NODE_ENV=development nodemon index.js",
     "test": "cross-env NODE_ENV=test jest --verbose --runInBand",
     "start:test": "cross-env NODE_ENV=test node index.js",
-    "build:ui": "rm -rf build && cd ../bloglist-frontend && npm run build && cp -r build ../bloglist-backend"
+    "build:ui": "rm -rf build && cd ../react-query-bloglist-fe && npm run build && cp -r build ../bloglist-backend"
   },
   "author": "Kamila Dynysiuk",
   "license": "ISC",

@@ -28,7 +28,6 @@ const SignUp = () => {
       event.stopPropagation()
     }
     setValidated(true)
-    console.log(validated)
     if (user.name && user.username) {
       newUserMutation.mutate(user)
     }
