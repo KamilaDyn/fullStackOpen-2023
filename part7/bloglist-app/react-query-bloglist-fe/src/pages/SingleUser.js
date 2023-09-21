@@ -1,5 +1,7 @@
-import { useParams } from 'react-router-dom'
+import { useParams, Link } from 'react-router-dom'
 import { useGetUsers } from '../hooks'
+import { Header, Loading } from '../components'
+import { ListGroup } from 'react-bootstrap'
 const SingleUser = () => {
   const { status, users } = useGetUsers()
 
@@ -7,25 +9,29 @@ const SingleUser = () => {
   const user = users && users.find(({ id }) => id === userId)
 
   if (status === 'loading') {
-    return <p>loading</p>
+    return <Loading />
   }
   if (!user) {
     return null
   }
   return (
-    <>
-      <h2>{user.name}</h2>
-      <p>added blogs</p>
+    <div className="container">
+      <Header>User name: {user.name}</Header>
       {user.blogs && user.blogs.length ? (
-        <ul>
-          {user.blogs.map(({ id, title }) => (
-            <li key={id}>{title}</li>
-          ))}
-        </ul>
+        <>
+          <p className="h4 text-success">Added blogs</p>
+          <ListGroup as="ol" numbered>
+            {user.blogs.map(({ id, title }) => (
+              <ListGroup.Item as="li" key={id}>
+                <Link to={`/blogs/${id}`}>{title}</Link>
+              </ListGroup.Item>
+            ))}
+          </ListGroup>
+        </>
       ) : (
-        <p>no blogs added by user.</p>
+        <p className="h4 text-danger">No blogs added by user</p>
       )}
-    </>
+    </div>
   )
 }
 

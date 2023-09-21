@@ -3,14 +3,19 @@ import PropTypes from 'prop-types'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { createBlog } from '../services/blogs'
 import { useNotification } from '../context/NotificationContext'
+import { Button, Card, Form } from 'react-bootstrap'
 
 const initialBlog = {
   title: '',
   author: '',
   url: '',
 }
+const cardStyle = {
+  maxWidth: '750px',
+}
 const BlogForm = ({ blogFormRef }) => {
   const [blogData, setBlogData] = useState(initialBlog)
+  const [validated, setValidated] = useState(false)
   const queryClient = useQueryClient()
   const setNotification = useNotification()
 
@@ -34,52 +39,74 @@ const BlogForm = ({ blogFormRef }) => {
     },
   })
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
+  const handleSubmit = (event) => {
+    event.preventDefault()
+    const form = event.currentTarget
+    if (form.checkValidity() === false) {
+      event.stopPropagation()
+    }
+
+    setValidated(true)
+
     if (blogData.author && blogData.title && blogData.url) {
       newBlogMutation.mutate({ ...blogData })
       blogFormRef.current.toggleVisibility()
       setBlogData(initialBlog)
-    } else {
-      setNotification({ type: 'error', text: 'fill all fields' }, 5)
     }
   }
   return (
-    <form onSubmit={handleSubmit}>
-      <div>
-        Title
-        <input
-          id="title"
-          type="text"
-          value={title}
-          name="title"
-          onChange={handleChange}
-        />
-      </div>
-      <div>
-        author
-        <input
-          id="author"
-          type="text"
-          value={author}
-          name="author"
-          onChange={handleChange}
-        />
-      </div>
-      <div>
-        url
-        <input
-          id="url"
-          type="text"
-          value={url}
-          name="url"
-          onChange={handleChange}
-        />
-      </div>
-      <button id="create" type="submit">
-        create
-      </button>
-    </form>
+    <Card className="mb-3 w-100" style={cardStyle}>
+      <Card.Body>
+        <Form noValidate validated={validated} onSubmit={handleSubmit}>
+          <Form.Group className="mb-3">
+            <Form.Label>Title</Form.Label>
+            <Form.Control
+              required
+              minLength={5}
+              id="title"
+              placeholder="Title"
+              value={title}
+              name="title"
+              onChange={handleChange}
+            />
+            <Form.Control.Feedback type="invalid">
+              Please write a title, min 3 letters
+            </Form.Control.Feedback>
+          </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Label>Author</Form.Label>
+            <Form.Control
+              required
+              id="author"
+              type="text"
+              value={author}
+              name="author"
+              onChange={handleChange}
+            />
+            <Form.Control.Feedback type="invalid">
+              Please write author
+            </Form.Control.Feedback>
+          </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Label>Url</Form.Label>
+            <Form.Control
+              required
+              id="url"
+              type="text"
+              value={url}
+              name="url"
+              onChange={handleChange}
+            />
+            <Form.Control.Feedback type="invalid">
+              Please write blog url
+            </Form.Control.Feedback>
+          </Form.Group>
+          <Button type="submit" id="create">
+            Create
+          </Button>
+        </Form>
+      </Card.Body>
+    </Card>
   )
 }
 

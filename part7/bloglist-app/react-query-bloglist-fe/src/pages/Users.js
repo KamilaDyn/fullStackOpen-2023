@@ -1,32 +1,47 @@
+import { Header, Loading } from '../components'
 import { useGetUsers } from '../hooks'
 import { Link } from 'react-router-dom'
+import { Table } from 'react-bootstrap'
+const styles = {
+  wrapper: {
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+  },
+  table: {
+    maxWidth: '750px',
+  },
+}
+
 const Users = () => {
   const { status, users } = useGetUsers()
   if (status === 'loading') {
-    return <p>loading</p>
+    return <Loading />
   }
   return (
-    <>
-      <h2>Users</h2>
-      <table>
-        <thead>
-          <tr>
-            <th></th>
-            <th>blog created</th>
-          </tr>
-        </thead>
-        <tbody>
-          {users.map(({ id, blogs, name }) => (
-            <tr key={id}>
-              <td>
-                <Link to={`/users/${id}`}>{name}</Link>
-              </td>
-              <td>{blogs.length}</td>
+    <div>
+      <Header>Users</Header>
+      <div style={styles.wrapper}>
+        <Table striped bordered hover style={styles.table}>
+          <thead>
+            <tr>
+              <th></th>
+              <th>Blogs created</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
-    </>
+          </thead>
+          <tbody>
+            {users.map(({ id, blogs, name }) => (
+              <tr key={id}>
+                <td>
+                  <Link to={`/users/${id}`}>{name}</Link>
+                </td>
+                <td>{blogs.length}</td>
+              </tr>
+            ))}
+          </tbody>
+        </Table>
+      </div>
+    </div>
   )
 }
 

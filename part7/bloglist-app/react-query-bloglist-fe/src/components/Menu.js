@@ -16,9 +16,9 @@ const Menu = () => {
       data-bs-theme="dark"
     >
       <Container>
-        <Navbar.Brand href="#home">
+        <Navbar.Text className="h3 mr-3 text-white">
           Blog App - Helsinki Full stack course 2023
-        </Navbar.Brand>
+        </Navbar.Text>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">

@@ -1,11 +1,12 @@
 import { useState } from 'react'
 import { useAddComment } from '../hooks'
 import { useParams } from 'react-router-dom'
-import { useNotification } from '../context/NotificationContext'
+import { Button, Form } from 'react-bootstrap'
 
 const CommentForm = () => {
   const [comment, setComment] = useState('')
-  const setNotification = useNotification()
+  const [validated, setValidated] = useState(false)
+
   const { id } = useParams()
   const newCommentMutation = useAddComment()
   const handleSubmit = (event) => {
@@ -14,17 +15,15 @@ const CommentForm = () => {
       id: id,
       comment: comment,
     }
-    if (comment.length > 3) {
+    const form = event.currentTarget
+    if (form.checkValidity() === false) {
+      event.stopPropagation()
+    }
+
+    setValidated(true)
+    if (comment.length > 10) {
       newCommentMutation.mutate(newComment)
       setComment('')
-    } else {
-      setNotification(
-        {
-          type: 'error',
-          text: 'Comment must be length min 3 letters',
-        },
-        5,
-      )
     }
   }
 
@@ -33,10 +32,28 @@ const CommentForm = () => {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input value={comment} onChange={handleChange} />{' '}
-      <button type="submit">Add Comment</button>{' '}
-    </form>
+    <Form
+      noValidate
+      validated={validated}
+      onSubmit={handleSubmit}
+      className="d-flex align-items-center"
+    >
+      <Form.Group className="mx-3 w-50">
+        <Form.Control
+          required
+          minLength={10}
+          as="textarea"
+          aria-label="With textarea"
+          placeholder="Write a comment"
+          value={comment}
+          onChange={handleChange}
+        />
+        <Form.Control.Feedback type="invalid">
+          Add comment min 10 letters.
+        </Form.Control.Feedback>
+      </Form.Group>
+      <Button type="submit">Add Comment</Button>
+    </Form>
   )
 }
 

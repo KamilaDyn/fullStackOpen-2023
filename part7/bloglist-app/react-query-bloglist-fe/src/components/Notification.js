@@ -1,4 +1,5 @@
 import { useNotificationValue } from '../context/NotificationContext'
+import { Alert } from 'react-bootstrap'
 
 function Notification() {
   const notification = useNotificationValue()
@@ -6,9 +7,9 @@ function Notification() {
     return null
   }
   return (
-    <div id="notification" className={notification.type}>
+    <Alert variant={notification.type === 'error' ? 'danger' : 'success'}>
       {notification.text}
-    </div>
+    </Alert>
   )
 }
 
