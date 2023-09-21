@@ -7,6 +7,7 @@ import SingleUser from './pages/SingleUser'
 import Blog from './pages/Blog'
 import ProtectedRoute from './components/ProtectRoute'
 import Login from './pages/Login'
+import SignUp from './pages/SignUp'
 
 const App = () => {
   const dispatch = useUserDispatch()
@@ -22,6 +23,7 @@ const App = () => {
     <Router>
       <Routes>
         <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<SignUp />} />
         <Route
           path="/"
           element={

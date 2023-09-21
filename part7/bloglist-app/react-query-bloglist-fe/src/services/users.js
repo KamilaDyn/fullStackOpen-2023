@@ -6,4 +6,9 @@ const getAllUsers = async () => {
   return response.data
 }
 
-export { getAllUsers }
+const addNewUser = async (user) => {
+  const response = await axios.post(baseUrl.users, user)
+  return response.data
+}
+
+export { getAllUsers, addNewUser }

@@ -2,6 +2,7 @@ import PropTypes from 'prop-types'
 import { useLoginUser } from '../context/UserContext'
 import { Button, Card, Form } from 'react-bootstrap'
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const styles = {
   card: {
@@ -11,6 +12,7 @@ const styles = {
 }
 
 const LoginForm = ({ setUserData, userData }) => {
+  const navigate = useNavigate()
   const setUser = useLoginUser()
   const [validated, setValidated] = useState(false)
 
@@ -31,7 +33,6 @@ const LoginForm = ({ setUserData, userData }) => {
   }
   return (
     <Card body style={styles.card}>
-      {' '}
       <Form noValidate validated={validated} onSubmit={handleLogin}>
         <Form.Group className="mb-3">
           <Form.Label>Username</Form.Label>
@@ -69,6 +70,13 @@ const LoginForm = ({ setUserData, userData }) => {
           Login
         </Button>
       </Form>
+      <hr />
+      <div className="d-flex align-items-center">
+        You do not have account?{' '}
+        <Button variant="text" onClick={() => navigate('/signup')}>
+          Register
+        </Button>
+      </div>
     </Card>
   )
 }
