@@ -106,3 +106,22 @@ Use query  to get data from server , and useMutation to mutate data. Create Cont
 </li>
 
 </ul>
+
+## PART7 React router, custom hooks, styling app with CSS and webpack
+
+This part touches on several different themes. Get familiar with React router. Look at a few more ways to add CSS styles to React applications. Use Vite to generate the body of applications. Look at hooks and define a custom hook.
+
+<ul>
+<li>
+React router <a href='https://github.com/KamilaDyn/fullStackOpen-2023/tree/master/part7/routed-anecdotes'>routed-anecdotes exercise</a> Very common for web applications to have a navigation bar, which enables switching the view of the application. Used react-router-dom package.
+</li>
+<li> Create custom hooks. <a href='https://github.com/KamilaDyn/fullStackOpen-2023/tree/master/part7/country-hook'>country-hook exercise</a>One hoook which can be reused in the blog post application for dealing with the communication with the backend.
+</li>
+<li>Create reused hook <a href='https://github.com/KamilaDyn/fullStackOpen-2023/tree/master/part7/ultimate-hooks'>ultimate hook</a></li>
+<li>Styles in React different libraries: MaterialUi, Bootstrap, Reactstrap, react-bootstrap, Styled Component</li>
+<li>Webpack in React. Building configuration, webpack-dev-server</li>
+<li>Older version for components, class components. Virtual DOM, React/node-application security</li>
+<li>Bloglist app: <a href ='https://github.com/KamilaDyn/fullStackOpen-2023/tree/master/part7/bloglist-app/bloglist-frontend'>blog list app</a> extending bloglist app from part5, using Redux Toolkit</li>
+<li>Blog list app final verion: <a href='https://github.com/KamilaDyn/fullStackOpen-2023/tree/master/part7/bloglist-app/react-query-bloglist-fe'>blog list with react query</a>Extend app with styled - Bootstrap library, add hooks, react query, using context </li>
+</ul>
+<div><p>Final view: <a href='https://bloglist-app-fe.onrender.com/'>Blog list app deployed in render </a></p></div>
