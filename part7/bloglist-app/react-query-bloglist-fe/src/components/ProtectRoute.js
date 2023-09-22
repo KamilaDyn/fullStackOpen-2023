@@ -13,7 +13,6 @@ const ProtectedRoute = ({ children }) => {
       dispatch({ type: 'LOGGED_USER', payload: userJson })
     }
   }, [])
-  console.log(user)
   if (!user) {
     return <Navigate to="/login" />
   }

@@ -52,6 +52,7 @@ const Blog = () => {
           <Card.Text>
             Link to blog: <a href={blog.url}>{blog.url}</a>
           </Card.Text>
+          <Card.Text>Added by : {blog.user.name}</Card.Text>
           {user && user.name === blog.user.name && (
             <Button variant="danger" onClick={() => handleBlogDelete(blog)}>
               Remove
