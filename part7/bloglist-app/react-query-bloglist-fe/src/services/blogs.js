@@ -1,7 +1,6 @@
 import axios from 'axios'
 import baseUrl from '../config'
 import { getToken } from '../storage'
-
 const getAll = async () => {
   const response = await axios.get(baseUrl.blogs)
   return response.data

@@ -1,6 +1,8 @@
-const { URL_PRODUCTION } = process.env
+const { REACT_APP_URL_PRODUCTION } = process.env
 
-const apiUrl = process.env.NODE_ENV === 'production' ? URL_PRODUCTION : ''
+const apiUrl =
+  process.env.NODE_ENV === 'production' ? REACT_APP_URL_PRODUCTION : ''
+
 export const baseUrl = {
   blogs: `${apiUrl}/api/blogs`,
   login: `${apiUrl}/api/login`,
