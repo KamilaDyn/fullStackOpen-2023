@@ -114,7 +114,8 @@ const typeDefs = `
   type Author {
     name: String!
     bookCount: Int!
-    born: Int!
+    born: Int
+    id: ID!
   }
   type Mutation{
     addBook(
@@ -160,8 +161,10 @@ const resolvers = {
   },
   Author: {
     name: (root) => root.name,
+    born: (root) => root.born,
     bookCount: (root) =>
       books.filter(({ author }) => author === root.name).length || 0,
+    id: (root) => root.id,
   },
   Mutation: {
     addBook: (root, args) => {
