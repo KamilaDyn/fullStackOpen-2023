@@ -110,6 +110,7 @@ const typeDefs = `
     published: Int!
     author: String!
     genres: [String!]!
+    id: ID!
   }
   type Author {
     name: String!
