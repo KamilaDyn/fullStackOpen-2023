@@ -14,6 +14,7 @@ const NewBook = ({ show, setError }) => {
     refetchQueries: [{ query: ALL_BOOKS }],
     onError: (error) => {
       const message = error.graphQLErrors.map((err) => err.message).join("\n");
+      console.log(error.graphQLErrors);
       setError(message);
     },
   });
@@ -24,11 +25,12 @@ const NewBook = ({ show, setError }) => {
   const submit = async (event) => {
     event.preventDefault();
     createBook({ variables: { title, author, published, genres } });
-    setTitle("");
-    setPublished("");
-    setAuthor("");
-    setGenres([]);
-    setGenre("");
+
+    // setTitle("");
+    // setPublished("");
+    // setAuthor("");
+    // setGenres([]);
+    // setGenre("");
   };
 
   const addGenre = () => {

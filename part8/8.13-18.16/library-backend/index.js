@@ -1,6 +1,24 @@
+const { GraphQLError } = require("graphql");
 const { ApolloServer } = require("@apollo/server");
+const { ApolloServerErrorCode } = require("@apollo/server/errors");
+
 const { startStandaloneServer } = require("@apollo/server/standalone");
-const { v1: uuid } = require("uuid");
+
+require("dotenv").config();
+
+const mongoose = require("mongoose");
+mongoose.set("strictQuery", false);
+const Book = require("./models/book");
+const Author = require("./models/author");
+const MONGODB_URI = process.env.MONGODB_URI;
+mongoose
+  .connect(MONGODB_URI)
+  .then(() => {
+    console.log("connected to MongoDB");
+  })
+  .catch((error) => {
+    console.log("error connection to MongoDB:", error.message);
+  });
 
 let authors = [
   {
@@ -42,58 +60,6 @@ let authors = [
  * Sin embargo, por simplicidad, almacenaremos el nombre del autor en conección con el libro
  */
 
-let books = [
-  {
-    title: "Clean Code",
-    published: 2008,
-    author: "Robert Martin",
-    id: "afa5b6f4-344d-11e9-a414-719c6709cf3e",
-    genres: ["refactoring"],
-  },
-  {
-    title: "Agile software development",
-    published: 2002,
-    author: "Robert Martin",
-    id: "afa5b6f5-344d-11e9-a414-719c6709cf3e",
-    genres: ["agile", "patterns", "design"],
-  },
-  {
-    title: "Refactoring, edition 2",
-    published: 2018,
-    author: "Martin Fowler",
-    id: "afa5de00-344d-11e9-a414-719c6709cf3e",
-    genres: ["refactoring"],
-  },
-  {
-    title: "Refactoring to patterns",
-    published: 2008,
-    author: "Joshua Kerievsky",
-    id: "afa5de01-344d-11e9-a414-719c6709cf3e",
-    genres: ["refactoring", "patterns"],
-  },
-  {
-    title: "Practical Object-Oriented Design, An Agile Primer Using Ruby",
-    published: 2012,
-    author: "Sandi Metz",
-    id: "afa5de02-344d-11e9-a414-719c6709cf3e",
-    genres: ["refactoring", "design"],
-  },
-  {
-    title: "Crime and punishment",
-    published: 1866,
-    author: "Fyodor Dostoevsky",
-    id: "afa5de03-344d-11e9-a414-719c6709cf3e",
-    genres: ["classic", "crime"],
-  },
-  {
-    title: "The Demon ",
-    published: 1872,
-    author: "Fyodor Dostoevsky",
-    id: "afa5de04-344d-11e9-a414-719c6709cf3e",
-    genres: ["classic", "revolution"],
-  },
-];
-
 /*
   you can remove the placeholder query once your first one has been implemented 
 */
@@ -105,23 +71,29 @@ const typeDefs = `
     allBooks(author: String, genre : String): [Book!]!
     allAuthors: [Author!]!
     }
-  type Book{
-    title: String!
-    published: Int!
-    author: String!
-    genres: [String!]!
-    id: ID!
-  }
-  type Author {
-    name: String!
-    bookCount: Int!
-    born: Int
-    id: ID!
-  }
+
+    
+    type Author {
+      id: ID!
+      name: String!
+      born: Int
+      bookCount: Int
+    }
+  
+    type Book {
+      id: ID!
+      title: String!
+      published: Int!
+      author: Author!
+      genres: [String!]!
+    }
+  
+
+
   type Mutation{
     addBook(
       title: String!
-      author: String!
+      author: String
       published: Int!
       genres: [String!]
     ): Book
@@ -132,46 +104,89 @@ const typeDefs = `
   }
 
 `;
-
 const resolvers = {
   Query: {
-    bookCount: () => books.length,
-    authorCount: () => authors.length,
-    allBooks: (root, args) => {
-      let filteredBooks = books;
+    bookCount: async () => {
+      const res = await Book.find();
+      return res.length;
+    },
+    authorCount: async () => {
+      const response = await Author.find();
+      return response.length;
+    },
+    allBooks: async (_, args) => {
+      let response = await Book.find();
+
       if (args.author) {
-        filteredBooks = filteredBooks.filter(
-          ({ author }) => author === args.author
-        );
+        response = response.filter(({ author }) => author.name === args.author);
       }
 
       if (args.genre) {
-        filteredBooks = filteredBooks.filter(({ genres }) =>
-          genres.includes(args.genre)
-        );
+        response = response.filter(({ genres }) => genres.includes(args.genre));
       }
-      return filteredBooks;
+      return response;
     },
-    allAuthors: () => authors,
-  },
-  Book: {
-    title: (root) => root.title,
-    author: (root) => root.author,
-    published: (root) => root.published,
-    genres: (root) => root.genres,
+    allAuthors: async () => {
+      const response = Author.find();
+      return response;
+    },
   },
   Author: {
     name: (root) => root.name,
     born: (root) => root.born,
-    bookCount: (root) =>
-      books.filter(({ author }) => author === root.name).length || 0,
+    bookCount: async (root) => {
+      const books = await Book.find({ author: root.id });
+      return books.length;
+    },
     id: (root) => root.id,
   },
+  Book: {
+    author: async (root) => {
+      const author = await Author.findById(root.author);
+      return {
+        id: author._id,
+        name: author.name,
+        born: author.born,
+      };
+    },
+  },
+
   Mutation: {
-    addBook: (root, args) => {
-      const book = { ...args, id: uuid() };
-      books = books.concat(book);
-      return book;
+    addBook: async (_, args) => {
+      let author = await Author.findOne({ name: args.author });
+
+      const book = new Book({
+        title: args.title,
+        published: args.published,
+        author,
+        genres: args.genres,
+      });
+
+      try {
+        if (!author) {
+          author = await new Author({ name: args.author }).save();
+        }
+      } catch (error) {
+        throw new GraphQLError("Author must be minimum 4 letters", {
+          extensions: {
+            code: "INTERNAL_SERVER_ERROR",
+            invalidArgs: args.author,
+            error,
+          },
+        });
+      }
+
+      try {
+        await book.save();
+      } catch (error) {
+        throw new GraphQLError(error.message, {
+          extensions: {
+            code: "INTERNAL_SERVER_ERROR",
+            invalidArgs: args.title,
+            error,
+          },
+        });
+      }
     },
     editAuthor: (root, args) => {
       const author = authors.find((author) => author.name === args.name);

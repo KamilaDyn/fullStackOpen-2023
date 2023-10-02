@@ -21,7 +21,6 @@ const BirthYear = ({ setError, authors }) => {
       changeBirthYear({ variables: { name, setBornTo } });
     }
   };
-  console.log(authors);
 
   return (
     <div>
