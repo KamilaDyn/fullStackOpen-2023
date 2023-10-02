@@ -7,9 +7,7 @@ import Notify from "./components/Notify";
 const App = () => {
   const [page, setPage] = useState("authors");
   const [error, setError] = useState(null);
-  console.log(error);
   const notify = (message) => {
-    console.log(message);
     setError(message);
     setTimeout(() => {
       setError(null);
@@ -23,7 +21,7 @@ const App = () => {
         <button onClick={() => setPage("add")}>add book</button>
       </div>
       {error && <Notify errorMessage={error} />}
-      <Authors show={page === "authors"} />
+      <Authors show={page === "authors"} setError={notify} />
 
       <Books show={page === "books"} />
 
