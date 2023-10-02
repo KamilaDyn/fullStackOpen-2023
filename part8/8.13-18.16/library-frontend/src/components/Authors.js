@@ -1,11 +1,10 @@
 import { useQuery } from "@apollo/client";
 import BirthYear from "./BirthYear";
 
-import { ALL_BOOKS, All_AUTHORS } from "../queries";
+import { All_AUTHORS } from "../queries";
 
 const Authors = ({ show, setError }) => {
   const result = useQuery(All_AUTHORS);
-  const books = useQuery(ALL_BOOKS);
   if (!show) {
     return null;
   }

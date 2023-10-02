@@ -87,8 +87,6 @@ const typeDefs = `
       author: Author!
       genres: [String!]!
     }
-  
-
 
   type Mutation{
     addBook(
@@ -99,7 +97,7 @@ const typeDefs = `
     ): Book
     editAuthor(
       name: String!
-      setBornTo: Int!
+      born: Int!
     ): Author
   }
 
@@ -115,7 +113,7 @@ const resolvers = {
       return response.length;
     },
     allBooks: async (_, args) => {
-      let response = await Book.find();
+      let response = await Book.find({});
 
       if (args.author) {
         response = response.filter(({ author }) => author.name === args.author);
@@ -127,7 +125,7 @@ const resolvers = {
       return response;
     },
     allAuthors: async () => {
-      const response = Author.find();
+      const response = Author.find({});
       return response;
     },
   },
@@ -141,43 +139,40 @@ const resolvers = {
     id: (root) => root.id,
   },
   Book: {
-    author: async (root) => {
-      const author = await Author.findById(root.author);
-      return {
-        id: author._id,
-        name: author.name,
-        born: author.born,
-      };
-    },
+    author: async (root) => await Author.findById(root.author),
   },
 
   Mutation: {
     addBook: async (_, args) => {
       let author = await Author.findOne({ name: args.author });
-
+      const findBook = await Book.findOne({ title: args.title });
+      console.log(findBook);
+      if (findBook) {
+        throw new GraphQLError("Book already exist", {
+          extensions: {
+            code: "INTERNAL_SERVER_ERROR",
+          },
+        });
+      }
       const book = new Book({
         title: args.title,
         published: args.published,
         author,
         genres: args.genres,
       });
-
-      try {
-        if (!author) {
-          author = await new Author({ name: args.author }).save();
-        }
-      } catch (error) {
+      if (args.author.length < 4) {
         throw new GraphQLError("Author must be minimum 4 letters", {
           extensions: {
             code: "INTERNAL_SERVER_ERROR",
-            invalidArgs: args.author,
-            error,
           },
         });
       }
 
+      if (!author) {
+        author = await new Author({ name: args.author }).save();
+      }
       try {
-        await book.save();
+        book.save();
       } catch (error) {
         throw new GraphQLError(error.message, {
           extensions: {
@@ -188,17 +183,13 @@ const resolvers = {
         });
       }
     },
-    editAuthor: (root, args) => {
-      const author = authors.find((author) => author.name === args.name);
-      if (!author) {
-        return null;
+    editAuthor: async (_, args) => {
+      let author = await Author.findOne({ name: args.name });
+      if (author) {
+        author.born = args.born;
+        await author.save();
       }
-      const updateAuthor = { ...author, born: args.setBornTo };
-
-      authors = authors.map((author) =>
-        author.name === args.name ? updateAuthor : author
-      );
-      return updateAuthor;
+      return author;
     },
   },
 };

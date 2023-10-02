@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client";
 
 export const BIRTHDAY_YEAR = gql`
-  mutation changeBirthYear($name: String!, $setBornTo: Int!) {
-    editAuthor(name: $name, setBornTo: $setBornTo) {
+  mutation changeBirthYear($name: String!, $born: Int!) {
+    editAuthor(name: $name, born: $born) {
       name
       born
     }

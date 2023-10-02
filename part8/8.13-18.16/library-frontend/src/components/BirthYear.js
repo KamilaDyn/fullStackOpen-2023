@@ -3,8 +3,8 @@ import { useMutation } from "@apollo/client";
 import { BIRTHDAY_YEAR, All_AUTHORS } from "../queries";
 
 const BirthYear = ({ setError, authors }) => {
-  const [name, setName] = useState("");
-  const [setBornTo, setBornYear] = useState("");
+  const [name, setName] = useState((authors.length && authors[0].name) || "");
+  const [born, setBornYear] = useState("");
   const [changeBirthYear] = useMutation(BIRTHDAY_YEAR, {
     refetchQueries: [{ query: All_AUTHORS }],
     onError: (error) => {
@@ -14,14 +14,8 @@ const BirthYear = ({ setError, authors }) => {
   });
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    if (!name.length || setBornTo.length === 0) {
-      setError("add name and born year");
-    } else {
-      changeBirthYear({ variables: { name, setBornTo } });
-    }
+    changeBirthYear({ variables: { name, born } });
   };
-
   return (
     <div>
       <h2>Set birthday</h2>
@@ -46,8 +40,8 @@ const BirthYear = ({ setError, authors }) => {
 
           <input
             type="text"
-            name="setBornTo"
-            value={setBornTo}
+            name="born"
+            value={born}
             onChange={(e) => setBornYear(Number(e.target.value))}
           />
         </div>
