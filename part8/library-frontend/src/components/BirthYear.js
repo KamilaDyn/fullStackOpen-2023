@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useMutation } from "@apollo/client";
 import { BIRTHDAY_YEAR, All_AUTHORS } from "../queries";
 
-const BirthYear = ({ setError }) => {
+const BirthYear = ({ setError, authors }) => {
   const [name, setName] = useState("");
   const [setBornTo, setBornYear] = useState("");
   const [changeBirthYear] = useMutation(BIRTHDAY_YEAR, {
@@ -21,6 +21,7 @@ const BirthYear = ({ setError }) => {
       changeBirthYear({ variables: { name, setBornTo } });
     }
   };
+  console.log(authors);
 
   return (
     <div>
@@ -29,15 +30,21 @@ const BirthYear = ({ setError }) => {
         <div>
           {" "}
           <label id="name">name</label>
-          <input
-            type="text"
+          <select
             name="name"
             value={name}
             onChange={(e) => setName(e.target.value)}
-          />
+          >
+            {authors.map((author) => (
+              <option key={author.id} value={author.name}>
+                {author.name}
+              </option>
+            ))}
+          </select>
         </div>
         <div>
           <label>born</label>
+
           <input
             type="text"
             name="setBornTo"
