@@ -1,14 +1,19 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useQuery } from "@apollo/client";
 import Authors from "./components/Authors";
 import Books from "./components/Books";
 import NewBook from "./components/NewBook";
 import Notify from "./components/Notify";
 import Login from "./components/Login";
+import { ALL_BOOKS } from "./queries";
 
 const App = () => {
   const [page, setPage] = useState("authors");
   const [error, setError] = useState(null);
   const [token, setToken] = useState(null);
+  const [allGenresBook, setAllGenresBook] = useState([]);
+
+  const result = useQuery(ALL_BOOKS);
 
   const notify = (message) => {
     setError(message);
@@ -16,7 +21,20 @@ const App = () => {
       setError(null);
     }, 5000);
   };
-
+  useEffect(() => {
+    const genresBook =
+      result.data && result.data.allBooks.map((book) => book.genres).flat();
+    const genres = [...new Set(genresBook)];
+    if (genres.length) {
+      setAllGenresBook(genres);
+    }
+  }, [result.data]);
+  useEffect(() => {
+    const localToken = window.localStorage.getItem("user-data-book-app");
+    if (localToken) {
+      setToken(localToken);
+    }
+  }, []);
   if (!token) {
     return (
       <>
@@ -29,6 +47,7 @@ const App = () => {
     window.localStorage.removeItem("user-data-book-app");
     setToken(null);
   };
+
   return (
     <div>
       <div>
@@ -44,7 +63,7 @@ const App = () => {
       {error && <Notify errorMessage={error} />}
       <Authors show={page === "authors"} setError={notify} token={token} />
 
-      <Books show={page === "books"} />
+      <Books show={page === "books"} allGenresBook={allGenresBook} />
 
       <NewBook show={page === "add"} setError={notify} />
     </div>
