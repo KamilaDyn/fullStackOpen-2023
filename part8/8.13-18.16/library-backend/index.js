@@ -1,16 +1,13 @@
-const { GraphQLError } = require("graphql");
-const { ApolloServer } = require("@apollo/server");
-const { ApolloServerErrorCode } = require("@apollo/server/errors");
-
-const { startStandaloneServer } = require("@apollo/server/standalone");
-
 require("dotenv").config();
-
+const { ApolloServer } = require("@apollo/server");
+const { startStandaloneServer } = require("@apollo/server/standalone");
+const { typeDefs, resolvers } = require("./utils");
+const User = require("./models/user");
+const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
-mongoose.set("strictQuery", false);
-const Book = require("./models/book");
-const Author = require("./models/author");
 const MONGODB_URI = process.env.MONGODB_URI;
+mongoose.set("strictQuery", false);
+
 mongoose
   .connect(MONGODB_URI)
   .then(() => {
@@ -64,136 +61,6 @@ let authors = [
   you can remove the placeholder query once your first one has been implemented 
 */
 
-const typeDefs = `
-  type Query {
-    bookCount: Int!
-    authorCount:Int!
-    allBooks(author: String, genre : String): [Book!]!
-    allAuthors: [Author!]!
-    }
-
-    
-    type Author {
-      id: ID!
-      name: String!
-      born: Int
-      bookCount: Int
-    }
-  
-    type Book {
-      id: ID!
-      title: String!
-      published: Int!
-      author: Author!
-      genres: [String!]!
-    }
-
-  type Mutation{
-    addBook(
-      title: String!
-      author: String
-      published: Int!
-      genres: [String!]
-    ): Book
-    editAuthor(
-      name: String!
-      born: Int!
-    ): Author
-  }
-
-`;
-const resolvers = {
-  Query: {
-    bookCount: async () => {
-      const res = await Book.find();
-      return res.length;
-    },
-    authorCount: async () => {
-      const response = await Author.find();
-      return response.length;
-    },
-    allBooks: async (_, args) => {
-      let response = await Book.find({});
-
-      if (args.author) {
-        response = response.filter(({ author }) => author.name === args.author);
-      }
-
-      if (args.genre) {
-        response = response.filter(({ genres }) => genres.includes(args.genre));
-      }
-      return response;
-    },
-    allAuthors: async () => {
-      const response = Author.find({});
-      return response;
-    },
-  },
-  Author: {
-    name: (root) => root.name,
-    born: (root) => root.born,
-    bookCount: async (root) => {
-      const books = await Book.find({ author: root.id });
-      return books.length;
-    },
-    id: (root) => root.id,
-  },
-  Book: {
-    author: async (root) => await Author.findById(root.author),
-  },
-
-  Mutation: {
-    addBook: async (_, args) => {
-      let author = await Author.findOne({ name: args.author });
-      const findBook = await Book.findOne({ title: args.title });
-      console.log(findBook);
-      if (findBook) {
-        throw new GraphQLError("Book already exist", {
-          extensions: {
-            code: "INTERNAL_SERVER_ERROR",
-          },
-        });
-      }
-      const book = new Book({
-        title: args.title,
-        published: args.published,
-        author,
-        genres: args.genres,
-      });
-      if (args.author.length < 4) {
-        throw new GraphQLError("Author must be minimum 4 letters", {
-          extensions: {
-            code: "INTERNAL_SERVER_ERROR",
-          },
-        });
-      }
-
-      if (!author) {
-        author = await new Author({ name: args.author }).save();
-      }
-      try {
-        book.save();
-      } catch (error) {
-        throw new GraphQLError(error.message, {
-          extensions: {
-            code: "INTERNAL_SERVER_ERROR",
-            invalidArgs: args.title,
-            error,
-          },
-        });
-      }
-    },
-    editAuthor: async (_, args) => {
-      let author = await Author.findOne({ name: args.name });
-      if (author) {
-        author.born = args.born;
-        await author.save();
-      }
-      return author;
-    },
-  },
-};
-
 const server = new ApolloServer({
   typeDefs,
   resolvers,
@@ -201,6 +68,17 @@ const server = new ApolloServer({
 
 startStandaloneServer(server, {
   listen: { port: 4000 },
+  context: async ({ req, res }) => {
+    const auth = req ? req.headers.authorization : null;
+    if (auth && auth.toLowerCase().startsWith("bearer ")) {
+      const decodedToken = jwt.verify(
+        auth.substring(7),
+        process.env.JWT_SECRET
+      );
+      const currentUser = await User.findById(decodedToken.id);
+      return { currentUser };
+    }
+  },
 }).then(({ url }) => {
   console.log(`Server ready at ${url}`);
 });
