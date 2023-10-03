@@ -34,7 +34,7 @@ const App = () => {
       <div>
         <button onClick={() => setPage("authors")}>authors</button>
         <button onClick={() => setPage("books")}>books</button>
-        <button onClick={() => setPage("add")}>add book</button>
+        {token && <button onClick={() => setPage("add")}>add book</button>}
         {!token ? (
           <button onClick={() => setPage("login")}>login</button>
         ) : (
@@ -42,7 +42,7 @@ const App = () => {
         )}
       </div>
       {error && <Notify errorMessage={error} />}
-      <Authors show={page === "authors"} setError={notify} />
+      <Authors show={page === "authors"} setError={notify} token={token} />
 
       <Books show={page === "books"} />
 

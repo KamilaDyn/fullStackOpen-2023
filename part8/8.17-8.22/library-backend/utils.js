@@ -106,10 +106,17 @@ const resolvers = {
   },
 
   Mutation: {
-    addBook: async (_, args) => {
+    addBook: async (_, args, context) => {
+      const currentUser = context.currentUser;
+      if (!currentUser) {
+        throw new GraphQLError("not authenticated", {
+          extensions: {
+            code: "BAD_USER_INPUT",
+          },
+        });
+      }
       let author = await Author.findOne({ name: args.author });
       const findBook = await Book.findOne({ title: args.title });
-      console.log(findBook);
       if (findBook) {
         throw new GraphQLError("Book already exist", {
           extensions: {
@@ -146,8 +153,16 @@ const resolvers = {
         });
       }
     },
-    editAuthor: async (_, args) => {
+    editAuthor: async (_, args, context) => {
+      const currentUser = context.currentUser;
       let author = await Author.findOne({ name: args.name });
+      if (!currentUser) {
+        throw new GraphQLError("not authenticated", {
+          extensions: {
+            code: "BAD_USER_INPUT",
+          },
+        });
+      }
       if (author) {
         author.born = args.born;
         await author.save();
