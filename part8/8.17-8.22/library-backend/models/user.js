@@ -8,6 +8,11 @@ const schema = new mongoose.Schema({
     unique: true,
     minlength: 3,
   },
+  favoriteGenre: {
+    type: String,
+    require: true,
+    minlength: 5,
+  },
 });
 
 schema.plugin(uniqueValidator);

@@ -109,7 +109,6 @@ const resolvers = {
     addBook: async (_, args) => {
       let author = await Author.findOne({ name: args.author });
       const findBook = await Book.findOne({ title: args.title });
-      console.log(findBook);
       if (findBook) {
         throw new GraphQLError("Book already exist", {
           extensions: {

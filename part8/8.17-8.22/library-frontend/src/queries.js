@@ -7,6 +7,14 @@ export const LOGIN = gql`
     }
   }
 `;
+export const LOGGED_USER = gql`
+  query {
+    me {
+      username
+      favoriteGenre
+    }
+  }
+`;
 
 export const BIRTHDAY_YEAR = gql`
   mutation changeBirthYear($name: String!, $born: Int!) {

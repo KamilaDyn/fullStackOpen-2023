@@ -1,9 +1,18 @@
 import { useQuery } from "@apollo/client";
-import { ALL_BOOKS } from "../queries";
+import { ALL_BOOKS, LOGGED_USER } from "../queries";
 import { useEffect, useState } from "react";
 
-const Books = ({ show, allGenresBook }) => {
+const Books = ({ show, allGenresBook, page }) => {
   const [genre, setGenre] = useState("");
+  const { data: loggedUser } = useQuery(LOGGED_USER);
+  useEffect(() => {
+    const useFavoriteGerne = loggedUser.me.favoriteGenre;
+    if (page === "recommend") {
+      setGenre(useFavoriteGerne);
+    } else {
+      setGenre("");
+    }
+  }, [genre, page]);
   const result = useQuery(ALL_BOOKS, {
     variables: { genre },
   });
@@ -19,7 +28,7 @@ const Books = ({ show, allGenresBook }) => {
 
   return (
     <div>
-      <h2>books</h2>
+      <h2>{page === "books" ? "books" : "recommendations"}</h2>
 
       <table>
         <tbody>
@@ -37,7 +46,7 @@ const Books = ({ show, allGenresBook }) => {
           ))}
         </tbody>
       </table>
-      {!!allGenresBook.length && (
+      {page === "books" && !!allGenresBook.length && (
         <>
           {" "}
           <button onClick={() => setGenre(null)}>ALL</button>

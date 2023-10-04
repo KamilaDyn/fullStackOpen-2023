@@ -6,15 +6,15 @@ const jwt = require("jsonwebtoken");
 
 const { GraphQLError } = require("graphql");
 const typeDefs = `
-type User {
-  username: String!
-  favoriteGenre: String
-  id: ID!
-}
+  type User {
+    username: String!
+    favoriteGenre: String!
+    id: ID!
+  }
 
-type Token {
-  value: String!
-}
+  type Token {
+    value: String!
+  }
 
   type Query {
     bookCount: Int!
@@ -170,7 +170,10 @@ const resolvers = {
       return author;
     },
     createUser: async (_, args) => {
-      const user = new User({ username: args.username });
+      const user = new User({
+        username: args.username,
+        favoriteGenre: args.favoriteGenre,
+      });
       return user.save().catch((error) => {
         throw new GraphQLError("creating the user failed", {
           extensions: {

@@ -22,7 +22,6 @@ const Login = ({ setError, setToken }) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log(username);
     login({ variables: { username, password } });
   };
   return (
