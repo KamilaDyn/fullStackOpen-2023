@@ -60,6 +60,9 @@ const typeDefs = `
       password: String!
     ): Token
   }
+  type Subscriptions {
+    bookAdded: Book!
+  }
 
 `;
 const resolvers = {

@@ -6,8 +6,8 @@ const Books = ({ show, allGenresBook, page }) => {
   const [genre, setGenre] = useState("");
   const { data: loggedUser } = useQuery(LOGGED_USER);
   useEffect(() => {
-    const useFavoriteGerne = loggedUser.me.favoriteGenre;
-    if (page === "recommend") {
+    const useFavoriteGerne = loggedUser && loggedUser?.me?.favoriteGenre;
+    if (page === "recommend" && useFavoriteGerne) {
       setGenre(useFavoriteGerne);
     } else {
       setGenre("");
