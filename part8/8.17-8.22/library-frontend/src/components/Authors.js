@@ -3,7 +3,7 @@ import BirthYear from "./BirthYear";
 
 import { All_AUTHORS } from "../queries";
 
-const Authors = ({ show, setError, token }) => {
+const Authors = ({ show, notifyInfo, token }) => {
   const result = useQuery(All_AUTHORS);
   if (!show) {
     return null;
@@ -34,7 +34,7 @@ const Authors = ({ show, setError, token }) => {
           </tbody>
         </table>
       </div>
-      {token && <BirthYear setError={setError} authors={authors} />}
+      {token && <BirthYear notifyInfo={notifyInfo} authors={authors} />}
     </>
   );
 };

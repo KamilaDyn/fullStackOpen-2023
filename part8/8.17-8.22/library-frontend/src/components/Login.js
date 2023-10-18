@@ -2,13 +2,13 @@ import { useMutation } from "@apollo/client";
 import { useEffect, useState } from "react";
 import { LOGIN } from "../queries";
 
-const Login = ({ setError, setToken }) => {
+const Login = ({ setNotify, setToken }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   const [login, result] = useMutation(LOGIN, {
     onError: (error) => {
-      setError(error.graphQLErrors[0].message);
+      setNotify({ type: "error", message: error.graphQLErrors[0].message });
     },
   });
 

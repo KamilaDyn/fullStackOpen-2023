@@ -2,14 +2,17 @@ import { useState } from "react";
 import { useMutation } from "@apollo/client";
 import { BIRTHDAY_YEAR, All_AUTHORS } from "../queries";
 
-const BirthYear = ({ setError, authors }) => {
+const BirthYear = ({ notifyInfo, authors }) => {
   const [name, setName] = useState((authors.length && authors[0].name) || "");
   const [born, setBornYear] = useState("");
   const [changeBirthYear] = useMutation(BIRTHDAY_YEAR, {
     refetchQueries: [{ query: All_AUTHORS }],
     onError: (error) => {
       const message = error.graphQLErrors.map((err) => err.message).join("\n");
-      setError(message);
+      notifyInfo("error", message);
+    },
+    onCompleted: () => {
+      notifyInfo("success", "year is changed");
     },
   });
   const handleSubmit = (e) => {

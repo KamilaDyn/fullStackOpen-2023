@@ -9,10 +9,11 @@ const Books = ({ show, allGenresBook, page }) => {
     const useFavoriteGerne = loggedUser && loggedUser?.me?.favoriteGenre;
     if (page === "recommend" && useFavoriteGerne) {
       setGenre(useFavoriteGerne);
-    } else {
+    }
+    if (page === "books") {
       setGenre("");
     }
-  }, [genre, page]);
+  }, [page, loggedUser]);
   const result = useQuery(ALL_BOOKS, {
     variables: { genre },
   });
@@ -49,7 +50,7 @@ const Books = ({ show, allGenresBook, page }) => {
       {page === "books" && !!allGenresBook.length && (
         <>
           {" "}
-          <button onClick={() => setGenre(null)}>ALL</button>
+          <button onClick={() => setGenre("")}>ALL</button>
           {allGenresBook.map(
             (genre) =>
               genre && (

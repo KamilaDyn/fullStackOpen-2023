@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useMutation } from "@apollo/client";
 import { ALL_BOOKS, CREATE_BOOK } from "../queries";
 
-const NewBook = ({ show, setError }) => {
+const NewBook = ({ show, notifyInfo }) => {
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [published, setPublished] = useState("");
@@ -14,7 +14,15 @@ const NewBook = ({ show, setError }) => {
     refetchQueries: [{ query: ALL_BOOKS }],
     onError: (error) => {
       const message = error.graphQLErrors.map((err) => err.message).join("\n");
-      setError(message);
+      notifyInfo("error", message);
+    },
+    onCompleted: () => {
+      notifyInfo("success", "Book added");
+      setTitle("");
+      setPublished("");
+      setAuthor("");
+      setGenres([]);
+      setGenre("");
     },
   });
   if (!show) {
@@ -23,13 +31,8 @@ const NewBook = ({ show, setError }) => {
 
   const submit = async (event) => {
     event.preventDefault();
-    createBook({ variables: { title, author, published, genres } });
 
-    setTitle("");
-    setPublished("");
-    setAuthor("");
-    setGenres([]);
-    setGenre("");
+    createBook({ variables: { title, author, published, genres } });
   };
 
   const addGenre = () => {
@@ -57,7 +60,7 @@ const NewBook = ({ show, setError }) => {
         <div>
           published
           <input
-            type="number"
+            type="text"
             value={published}
             onChange={({ target }) => setPublished(Number(target.value))}
           />

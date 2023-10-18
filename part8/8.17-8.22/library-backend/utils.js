@@ -122,19 +122,6 @@ const resolvers = {
       }
       let author = await Author.findOne({ name: args.author });
       const findBook = await Book.findOne({ title: args.title });
-      if (findBook) {
-        throw new GraphQLError("Book already exist", {
-          extensions: {
-            code: "INTERNAL_SERVER_ERROR",
-          },
-        });
-      }
-      const book = new Book({
-        title: args.title,
-        published: args.published,
-        author,
-        genres: args.genres,
-      });
       if (args.author.length < 4) {
         throw new GraphQLError("Author must be minimum 4 letters", {
           extensions: {
@@ -142,10 +129,30 @@ const resolvers = {
           },
         });
       }
-
+      if (args.title.length < 5) {
+        throw new GraphQLError("Title must be minimum 5 letters", {
+          extensions: {
+            code: "INTERNAL_SERVER_ERROR",
+          },
+        });
+      }
+      if (findBook) {
+        throw new GraphQLError("Book already exist", {
+          extensions: {
+            code: "INTERNAL_SERVER_ERROR",
+          },
+        });
+      }
       if (!author) {
         author = await new Author({ name: args.author }).save();
       }
+      const book = new Book({
+        title: args.title,
+        published: args.published,
+        author,
+        genres: args.genres,
+      });
+
       try {
         book.save();
       } catch (error) {
