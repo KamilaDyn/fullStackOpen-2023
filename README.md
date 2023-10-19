@@ -125,3 +125,12 @@ React router <a href='https://github.com/KamilaDyn/fullStackOpen-2023/tree/maste
 <li>Blog list app final verion: <a href='https://github.com/KamilaDyn/fullStackOpen-2023/tree/master/part7/bloglist-app/react-query-bloglist-fe'>blog list with react query</a>Extend app with styled - Bootstrap library, add hooks, react query, using context </li>
 </ul>
 <div><p>Final view: <a href='https://bloglist-app-fe.onrender.com/'>Blog list app deployed in render </a></p></div>
+
+## PART8 GraphQL
+
+<ul>
+<li> GraphQL-server <a href='https://github.com/KamilaDyn/fullStackOpen-2023/tree/master/part8/8.1-8.12'>Creat graphQL server -bakend.  </a> Implement queries , eturn bookas, authors , books by genre. Implement mutation for post new book, update birth author. 
+</li>
+<li>Database and user administration <a href='https://github.com/KamilaDyn/fullStackOpen-2023/tree/master/part8/8.13-18.16'>connect app with mongoose</a> Install mongoose and apollo. Storing data . Add user and login user functionality. </li> 
+<li>Login and updating cache, add subscriptions <a href='https://github.com/KamilaDyn/fullStackOpen-2023/tree/master/part8/8.17-8.26'>update cache app with cache and subscription</a>Add update login, notification when book is added, display error in notification from backend side. With subscriptions, clients can subscribe to updates about changes in the server</li>
+</ul>
