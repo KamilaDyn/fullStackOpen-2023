@@ -7,6 +7,7 @@ import Notify from "./components/Notify";
 import Login from "./components/Login";
 import { ALL_BOOKS, BOOK_ADDED } from "./queries";
 import { useApolloClient } from "@apollo/client";
+import { updateCache } from "./cache";
 
 const App = () => {
   const [page, setPage] = useState("authors");
@@ -14,22 +15,23 @@ const App = () => {
   const [token, setToken] = useState(null);
   const [allGenresBook, setAllGenresBook] = useState([]);
   const client = useApolloClient();
-
-  const result = useQuery(ALL_BOOKS);
-  useSubscription(BOOK_ADDED, {
-    onData: ({ data }) => {
-      console.log(data);
-      const bookTitle = data && data?.data?.bookAdded.title;
-      window.alert(bookTitle);
-    },
-  });
-
   const notifyInfo = (type, message) => {
     setNotify({ type: type, message: message });
     setTimeout(() => {
       setNotify(null);
     }, 5000);
   };
+
+  const result = useQuery(ALL_BOOKS);
+  useSubscription(BOOK_ADDED, {
+    onData: ({ data }) => {
+      const bookAdded = data && data?.data?.bookAdded;
+      notifyInfo("success", `${bookAdded.title} added`);
+
+      updateCache(client.cache, { query: ALL_BOOKS }, bookAdded);
+    },
+  });
+
   useEffect(() => {
     const genresBook =
       result.data && result.data.allBooks.map((book) => book.genres).flat();

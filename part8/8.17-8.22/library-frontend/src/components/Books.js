@@ -1,10 +1,13 @@
 import { useQuery } from "@apollo/client";
 import { ALL_BOOKS, LOGGED_USER } from "../queries";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 const Books = ({ show, allGenresBook, page }) => {
+  const [books, setBooks] = useState([]);
   const [genre, setGenre] = useState("");
-  const { data: loggedUser } = useQuery(LOGGED_USER);
+  const { data: loggedUser } = useQuery(LOGGED_USER, {
+    fetchPolicy: "cache-and-network",
+  });
   useEffect(() => {
     const useFavoriteGerne = loggedUser && loggedUser?.me?.favoriteGenre;
     if (page === "recommend" && useFavoriteGerne) {
@@ -18,11 +21,18 @@ const Books = ({ show, allGenresBook, page }) => {
     variables: { genre },
   });
 
+  const getAllBooks = useCallback(() => {
+    const books = (result.data && result.data.allBooks) || [];
+    setBooks(books);
+  }, [result.data]);
+
+  useEffect(() => {
+    getAllBooks();
+  }, [getAllBooks]);
+
   if (!show) {
     return null;
   }
-
-  const books = (result.data && result.data.allBooks) || [];
   if (result.loading) {
     return <div>loading...</div>;
   }

@@ -18,7 +18,7 @@ const Login = ({ setNotify, setToken }) => {
       setToken(token);
       window.localStorage.setItem("user-data-book-app", token);
     }
-  }, [result.data]);
+  }, [result.data, setToken]);
 
   const handleSubmit = (event) => {
     event.preventDefault();

@@ -81,7 +81,7 @@ const resolvers = {
       return response.length;
     },
     allBooks: async (_, args) => {
-      let response = await Book.find({});
+      let response = await Book.find({}).populate("author");
 
       if (args.author) {
         response = response.filter(({ author }) => author.name === args.author);
