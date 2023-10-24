@@ -1,5 +1,3 @@
-import { isNotNumber } from "./utils/inNotNumber";
-
 interface Target {
   periodLength: number;
   trainingDays: number;
@@ -9,25 +7,7 @@ interface Target {
   target: number;
   average: number;
 }
-
-interface MultiplyValues {
-  value1: number;
-  value2: number[];
-}
-const parseArguments = (args: string[]): MultiplyValues => {
-  if (isNotNumber(args[2])) throw new Error("First argument must be a number");
-
-  if (!isNotNumber(args[2])) {
-    return {
-      value1: Number(args[2]),
-      value2: args.slice(3).map((str) => parseFloat(str)),
-    };
-  } else {
-    throw new Error("Provided values were not numbers!");
-  }
-};
-
-const calculateExercises = (target: number, exercises: number[]): Target => {
+const calculateExercises = (exercises: number[], target: number): Target => {
   const trainingsDays = exercises.filter((number) => number > 0);
   const average =
     exercises.reduce((acc, curr) => acc + curr, 0) / exercises.length;
@@ -55,15 +35,5 @@ const calculateExercises = (target: number, exercises: number[]): Target => {
   };
   return targetAmount;
 };
-try {
-  const { value1, value2 } = parseArguments(process.argv);
-  console.log(calculateExercises(value1, value2));
-} catch (error: unknown) {
-  let errorMessage = "Something bad happened.";
-  if (error instanceof Error) {
-    errorMessage += " Error: " + error.message;
-  }
-  console.log(errorMessage);
-}
 
-// console.log(calculateExercises(3, [1, 0, 2, 4.5, 0, 3, 1, 0, 4]));
+console.log(calculateExercises([3, 0, 2, 4.5, 0, 3, 1], 3));
