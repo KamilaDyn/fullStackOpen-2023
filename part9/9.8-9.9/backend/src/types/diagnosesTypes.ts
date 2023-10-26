@@ -3,4 +3,3 @@ export interface DiagnosesEntry {
   name: string;
   latin?: string;
 }
-export type NonSensitiveDiagnosesEntry = Omit<DiagnosesEntry, "code">;
