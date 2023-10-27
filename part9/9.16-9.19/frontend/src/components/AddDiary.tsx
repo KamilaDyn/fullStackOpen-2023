@@ -1,9 +1,9 @@
 import { useState } from "react";
 import Field from "./Field";
-// import { Diary } from "../types";
 import { DiaryEntry, Visibility, Weather } from "../../../backend/src/types";
 import SelectField from "./SelectField";
 import { addNewDiary } from "../services/diaryService";
+import axios from "axios";
 
 type NewDiaryEntry = Omit<DiaryEntry, "id">;
 type Diary = Omit<DiaryEntry, "comment">;
@@ -11,9 +11,10 @@ type Diary = Omit<DiaryEntry, "comment">;
 interface AddDiaryProps {
   diaries: Diary[];
   setDiaries: React.Dispatch<React.SetStateAction<Diary[]>>;
+  handleError: (error: string) => void;
 }
 
-const AddDiary = ({ diaries, setDiaries }: AddDiaryProps) => {
+const AddDiary = ({ diaries, setDiaries, handleError }: AddDiaryProps) => {
   const [newDiary, setNewDiary] = useState<NewDiaryEntry>({
     date: "",
     visibility: Visibility.Great,
@@ -39,7 +40,20 @@ const AddDiary = ({ diaries, setDiaries }: AddDiaryProps) => {
       const addDiary = await addNewDiary(newDiary);
       setDiaries(diaries.concat(addDiary));
     } catch (err: unknown) {
-      console.error("Unknown error", err);
+      if (axios.isAxiosError(e)) {
+        if (e?.response?.data && typeof e?.response?.data === "string") {
+          const message = e.response.data.replace(
+            "Something went wrong. Error: ",
+            ""
+          );
+          handleError(message);
+        } else {
+          handleError("Unrecognized axios error");
+        }
+      } else {
+        console.error("Unknown error", e);
+        handleError("Unknown error");
+      }
     }
   };
 

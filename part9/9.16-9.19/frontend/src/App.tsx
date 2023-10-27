@@ -8,16 +8,28 @@ type Diary = Omit<DiaryEntry, "comment">;
 
 function App() {
   const [diaries, setDiaries] = useState<Diary[]>([]);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     getAllDiaries().then((data) => {
       setDiaries(data);
     });
   }, []);
+  const handleError = (error: string) => {
+    setError(error);
+    setTimeout(() => {
+      setError("");
+    }, 5000);
+  };
   return (
     <>
+      {!!error.length && <p style={{ color: "red" }}>{error}</p>}
       <div>
-        <AddDiary diaries={diaries} setDiaries={setDiaries} />
+        <AddDiary
+          diaries={diaries}
+          setDiaries={setDiaries}
+          handleError={handleError}
+        />
         <ul>
           {diaries.map(({ id, date, weather, visibility }) => (
             <li key={id}>
