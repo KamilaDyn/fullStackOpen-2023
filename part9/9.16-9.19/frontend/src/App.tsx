@@ -3,6 +3,7 @@ import "./App.css";
 import { getAllDiaries } from "./services/diaryService";
 import AddDiary from "./components/AddDiary";
 import { DiaryEntry } from "../../backend/src/types";
+import Header from "./components/Header";
 
 type Diary = Omit<DiaryEntry, "comment">;
 
@@ -24,16 +25,25 @@ function App() {
   return (
     <>
       {!!error.length && <p style={{ color: "red" }}>{error}</p>}
+      <Header title="Add new Diary" />
       <div>
         <AddDiary
           diaries={diaries}
           setDiaries={setDiaries}
           handleError={handleError}
         />
+      </div>
+      <div>
+        <Header title="Diary entries" />
+
         <ul>
           {diaries.map(({ id, date, weather, visibility }) => (
             <li key={id}>
-              Date: {date}, Weather {weather}, visibility {visibility}
+              <div>
+                <h3>{date}</h3>
+                <p>Visibility: {visibility}</p>
+                <p>Weather: {weather}</p>
+              </div>
             </li>
           ))}
         </ul>

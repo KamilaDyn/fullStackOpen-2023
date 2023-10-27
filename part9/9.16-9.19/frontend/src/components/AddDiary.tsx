@@ -1,9 +1,9 @@
 import { useState } from "react";
 import Field from "./Field";
 import { DiaryEntry, Visibility, Weather } from "../../../backend/src/types";
-import SelectField from "./SelectField";
 import { addNewDiary } from "../services/diaryService";
 import axios from "axios";
+import RadioButtonField from "./RadioButtonField";
 
 type NewDiaryEntry = Omit<DiaryEntry, "id">;
 type Diary = Omit<DiaryEntry, "comment">;
@@ -65,28 +65,39 @@ const AddDiary = ({ diaries, setDiaries, handleError }: AddDiaryProps) => {
         value={newDiary.date}
         handleChange={handleChange}
       />
-      <SelectField
-        label="Visibility"
-        name="visibility"
-        value={newDiary.visibility}
-        handleChange={handleChange}
-        options={visibilityOptions}
-      />
-
-      <SelectField
-        label="Weather"
-        name="weather"
-        handleChange={handleChange}
-        options={weatherOptions}
-        value={newDiary.weather}
-      />
-
+      <div style={{ display: "flex" }}>
+        {weatherOptions.map((value) => (
+          <RadioButtonField
+            key={value}
+            label={value}
+            name="weather"
+            value={value}
+            id={value}
+            checked={newDiary.weather === value}
+            handleChange={handleChange}
+          />
+        ))}
+      </div>
+      <div style={{ display: "flex" }}>
+        {visibilityOptions.map((value) => (
+          <RadioButtonField
+            key={value}
+            label={value}
+            name="visibility"
+            value={value}
+            id={value}
+            checked={newDiary.visibility === value}
+            handleChange={handleChange}
+          />
+        ))}
+      </div>
       <Field
         label="Comment"
         name="comment"
         value={newDiary.comment}
         handleChange={handleChange}
       />
+
       <button type="submit">add</button>
     </form>
   );
