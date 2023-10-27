@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import "./App.css";
-import { Diary } from "./types";
 import { getAllDiaries } from "./services/diaryService";
+import AddDiary from "./components/AddDiary";
+import { DiaryEntry } from "../../backend/src/types";
+
+type Diary = Omit<DiaryEntry, "comment">;
 
 function App() {
   const [diaries, setDiaries] = useState<Diary[]>([]);
@@ -14,6 +17,7 @@ function App() {
   return (
     <>
       <div>
+        <AddDiary diaries={diaries} setDiaries={setDiaries} />
         <ul>
           {diaries.map(({ id, date, weather, visibility }) => (
             <li key={id}>
