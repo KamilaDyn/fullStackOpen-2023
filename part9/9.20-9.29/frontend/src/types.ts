@@ -1,15 +1,55 @@
-export interface Diagnosis {
-  code: string;
-  name: string;
-  latin?: string;
-}
+import { HealthCheckRating } from "./enum";
 
 export enum Gender {
   Male = "male",
   Female = "female",
   Other = "other",
 }
-interface Entry {}
+export interface Diagnoses {
+  code: string;
+  name: string;
+  latin?: string;
+}
+
+interface BaseEntry {
+  id: string;
+  description: string;
+  date: string;
+  specialist: string;
+  diagnosisCodes?: Array<Diagnoses["code"]>;
+}
+
+interface HealthCheckEntry extends BaseEntry {
+  type: "HealthCheck";
+  healthCheckRating: HealthCheckRating;
+}
+
+interface HospitalEntry extends BaseEntry {
+  type: "Hospital";
+  discharge: {
+    date: string;
+    criteria: string;
+  };
+}
+
+interface OccupationalHealthcareEntry extends BaseEntry {
+  type: "OccupationalHealthcare";
+  employerName: string;
+  sickLeave?: {
+    startDate: string;
+    endDate: string;
+  };
+}
+export type Entry =
+  | HealthCheckEntry
+  | HospitalEntry
+  | OccupationalHealthcareEntry;
+
+export interface Diagnosis {
+  code: string;
+  name: string;
+  latin?: string;
+}
 
 export interface Patient {
   id: string;
@@ -20,7 +60,7 @@ export interface Patient {
   dateOfBirth?: string;
 }
 export interface SinglePatient extends Patient {
-  entires: Entry;
+  entries: Entry[];
 }
 
 export type PatientFormValues = Omit<Patient, "id" | "entries">;

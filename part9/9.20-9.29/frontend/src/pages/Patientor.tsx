@@ -1,8 +1,15 @@
-import { Container, Typography, Button } from "@mui/material";
+import {
+  Box,
+  Container,
+  List,
+  ListItem,
+  ListItemText,
+  Typography,
+} from "@mui/material";
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import patientsService from "../services/patients";
-import { Gender, SinglePatient } from "../types";
+import { Entry, Gender, SinglePatient } from "../types";
 import FemaleIcon from "@mui/icons-material/Female";
 import MaleIcon from "@mui/icons-material/Male";
 import TransgenderIcon from "@mui/icons-material/Transgender";
@@ -31,6 +38,21 @@ const Patientor = () => {
         <TransgenderIcon />;
     }
   };
+  const entryDetails = (entry: Entry) => {
+    switch (entry.type) {
+      case "OccupationalHealthcare":
+        return (
+          <ul>
+            {entry.diagnosisCodes?.map((code) => (
+              <li>{code}</li>
+            ))}
+          </ul>
+        );
+      default:
+        null;
+    }
+  };
+
   return (
     <Container style={{ marginTop: "0.8em" }}>
       <Typography variant="h3">
@@ -39,6 +61,17 @@ const Patientor = () => {
       <Typography>Birth: {patientor.dateOfBirth}</Typography>
       <Typography>ssh: {patientor.ssn}</Typography>
       <Typography>occupation: {patientor.occupation}</Typography>
+      <Box mt={"1em"}>
+        <Typography variant="h5">Entries</Typography>
+        {patientor.entries.length &&
+          patientor.entries.map((entry) => (
+            <Box key={entry.id}>
+              <Typography variant="h6">{entry.date}</Typography>
+              <Typography>{entry.description}</Typography>
+              {entryDetails(entry)}
+            </Box>
+          ))}
+      </Box>
     </Container>
   );
 };
