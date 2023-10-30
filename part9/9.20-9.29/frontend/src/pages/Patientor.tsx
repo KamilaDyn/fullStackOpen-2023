@@ -1,20 +1,13 @@
-import {
-  Box,
-  Container,
-  List,
-  ListItem,
-  ListItemText,
-  Typography,
-} from "@mui/material";
+import { Box, Container, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import patientsService from "../services/patients";
-import { Entry, Gender, SinglePatient } from "../types";
+import { Entry, Gender, SinglePatient, Diagnoses } from "../types";
 import FemaleIcon from "@mui/icons-material/Female";
 import MaleIcon from "@mui/icons-material/Male";
 import TransgenderIcon from "@mui/icons-material/Transgender";
 
-const Patientor = () => {
+const Patientor = ({ diagnoses }: { diagnoses: Diagnoses[] }) => {
   const [patientor, setPatient] = useState<SinglePatient | null>(null);
   const { id } = useParams();
 
@@ -25,6 +18,7 @@ const Patientor = () => {
     };
     void fetchPatient();
   }, [id]);
+
   if (patientor === null) {
     return <Typography>not found</Typography>;
   }
@@ -38,13 +32,20 @@ const Patientor = () => {
         <TransgenderIcon />;
     }
   };
+  const diagnoseDescription = (code: Diagnoses["code"]) => {
+    return diagnoses.find((d) => d.code === code)?.name;
+  };
+
   const entryDetails = (entry: Entry) => {
     switch (entry.type) {
       case "OccupationalHealthcare":
+      case "Hospital":
         return (
           <ul>
             {entry.diagnosisCodes?.map((code) => (
-              <li>{code}</li>
+              <li key={code}>
+                {code} <span>{diagnoseDescription(code)}</span>
+              </li>
             ))}
           </ul>
         );
