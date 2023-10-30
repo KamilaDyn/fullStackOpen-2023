@@ -18,7 +18,6 @@ const Patientor = () => {
     };
     void fetchPatient();
   }, [id]);
-  console.log(patientor);
   if (patientor === null) {
     return <Typography>not found</Typography>;
   }
