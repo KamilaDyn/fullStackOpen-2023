@@ -2,10 +2,11 @@ import { Box, Container, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import patientsService from "../services/patients";
-import { Entry, Gender, SinglePatient, Diagnoses } from "../types";
+import { Gender, SinglePatient, Diagnoses } from "../types";
 import FemaleIcon from "@mui/icons-material/Female";
 import MaleIcon from "@mui/icons-material/Male";
 import TransgenderIcon from "@mui/icons-material/Transgender";
+import EntryDetails from "../components/EntryDetails/EntryDetails";
 
 const Patientor = ({ diagnoses }: { diagnoses: Diagnoses[] }) => {
   const [patientor, setPatient] = useState<SinglePatient | null>(null);
@@ -32,27 +33,6 @@ const Patientor = ({ diagnoses }: { diagnoses: Diagnoses[] }) => {
         <TransgenderIcon />;
     }
   };
-  const diagnoseDescription = (code: Diagnoses["code"]) => {
-    return diagnoses.find((d) => d.code === code)?.name;
-  };
-
-  const entryDetails = (entry: Entry) => {
-    switch (entry.type) {
-      case "OccupationalHealthcare":
-      case "Hospital":
-        return (
-          <ul>
-            {entry.diagnosisCodes?.map((code) => (
-              <li key={code}>
-                {code} <span>{diagnoseDescription(code)}</span>
-              </li>
-            ))}
-          </ul>
-        );
-      default:
-        null;
-    }
-  };
 
   return (
     <Container style={{ marginTop: "0.8em" }}>
@@ -64,12 +44,10 @@ const Patientor = ({ diagnoses }: { diagnoses: Diagnoses[] }) => {
       <Typography>occupation: {patientor.occupation}</Typography>
       <Box mt={"1em"}>
         <Typography variant="h5">Entries</Typography>
-        {patientor.entries.length &&
+        {!!patientor.entries.length &&
           patientor.entries.map((entry) => (
             <Box key={entry.id}>
-              <Typography variant="h6">{entry.date}</Typography>
-              <Typography>{entry.description}</Typography>
-              {entryDetails(entry)}
+              <EntryDetails entry={entry} diagnoses={diagnoses} />
             </Box>
           ))}
       </Box>
