@@ -1,10 +1,5 @@
-import { HealthCheckRating } from "./enum";
+import { HealthCheckRating, Gender } from "./enum";
 
-export enum Gender {
-  Male = "male",
-  Female = "female",
-  Other = "other",
-}
 export interface Diagnoses {
   code: string;
   name: string;
@@ -19,12 +14,12 @@ interface BaseEntry {
   diagnosisCodes?: Array<Diagnoses["code"]>;
 }
 
-interface HealthCheckEntry extends BaseEntry {
+export interface HealthCheckEntry extends BaseEntry {
   type: "HealthCheck";
   healthCheckRating: HealthCheckRating;
 }
 
-interface HospitalEntry extends BaseEntry {
+export interface HospitalEntry extends BaseEntry {
   type: "Hospital";
   discharge: {
     date: string;
@@ -32,7 +27,7 @@ interface HospitalEntry extends BaseEntry {
   };
 }
 
-interface OccupationalHealthcareEntry extends BaseEntry {
+export interface OccupationalHealthcareEntry extends BaseEntry {
   type: "OccupationalHealthcare";
   employerName: string;
   sickLeave?: {
@@ -44,6 +39,12 @@ export type Entry =
   | HealthCheckEntry
   | HospitalEntry
   | OccupationalHealthcareEntry;
+
+type UnionOmit<T, K extends string | number | symbol> = T extends unknown
+  ? Omit<T, K>
+  : never;
+
+export type NewEntry = UnionOmit<Entry, "id">;
 
 export interface Diagnosis {
   code: string;

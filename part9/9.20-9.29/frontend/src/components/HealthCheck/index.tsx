@@ -1,9 +1,10 @@
-import { Entry } from "../../types";
+import { Diagnoses, HealthCheckEntry } from "../../types";
 import { Box, Card, CardContent, Typography } from "@mui/material";
 import { HealthCheckRating } from "../../enum";
 import FavoriteIcon from "@mui/icons-material/Favorite";
+import { diagnoseDescription } from "../../utils";
 
-const iconColor = (rate: number) => {
+const iconColor = (rate: HealthCheckRating) => {
   switch (rate) {
     case HealthCheckRating.CriticalRisk:
       return "inherit";
@@ -18,7 +19,13 @@ const iconColor = (rate: number) => {
   }
 };
 
-const HealthCheck = ({ entry }: { entry: Entry }) => {
+const HealthCheck = ({
+  entry,
+  diagnoses,
+}: {
+  entry: HealthCheckEntry;
+  diagnoses: Diagnoses[];
+}) => {
   return (
     <Card sx={{ marginBlock: "2em" }}>
       <CardContent>
@@ -27,6 +34,13 @@ const HealthCheck = ({ entry }: { entry: Entry }) => {
         <Box>
           <FavoriteIcon color={iconColor(entry.healthCheckRating)} />
         </Box>
+        <ul>
+          {entry.diagnosisCodes?.map((code) => (
+            <li key={code}>
+              {code}: {diagnoseDescription(code, diagnoses)}
+            </li>
+          ))}
+        </ul>
         <Typography variant="body2">
           Diagnosed by: {entry.specialist}
         </Typography>

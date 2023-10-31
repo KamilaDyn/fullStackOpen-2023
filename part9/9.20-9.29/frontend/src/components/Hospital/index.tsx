@@ -1,11 +1,11 @@
 import { Card, CardContent, Typography } from "@mui/material";
-import { Diagnoses, Entry } from "../../types";
+import { Diagnoses, HospitalEntry } from "../../types";
 import { diagnoseDescription } from "../../utils";
 const Hospital = ({
   entry,
   diagnoses,
 }: {
-  entry: Entry;
+  entry: HospitalEntry;
   diagnoses: Diagnoses[];
 }) => {
   return (
@@ -15,7 +15,7 @@ const Hospital = ({
         <Typography>{entry.description}</Typography>
         <ul>
           {entry.diagnosisCodes?.map((code) => (
-            <li>
+            <li key={code}>
               {code}: {diagnoseDescription(code, diagnoses)}
             </li>
           ))}
