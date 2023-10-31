@@ -10,3 +10,9 @@ export enum HealthCheckRating {
   "HightRisk" = 2,
   "CriticalRisk" = 3,
 }
+
+export enum HealthCheckType {
+  HealthCheck = "HealthCheck",
+  Hospital = "Hospital",
+  OccupationalHealthcare = "OccupationalHealthcare",
+}
