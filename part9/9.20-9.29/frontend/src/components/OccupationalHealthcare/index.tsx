@@ -1,11 +1,11 @@
 import { Card, CardContent, Typography } from "@mui/material";
-import { Entry, Diagnoses } from "../../types";
+import { Diagnoses, OccupationalHealthcareEntry } from "../../types";
 
 const OccupationalHealthcare = ({
   entry,
   diagnoses,
 }: {
-  entry: Entry;
+  entry: OccupationalHealthcareEntry;
   diagnoses: Diagnoses[];
 }) => {
   const diagnoseDescription = (code: Diagnoses["code"]) => {
@@ -23,6 +23,12 @@ const OccupationalHealthcare = ({
             </li>
           ))}
         </ul>
+        {entry?.sickLeave && (
+          <Typography>
+            Sick leave form {entry?.sickLeave.startDate} to{" "}
+            {entry?.sickLeave.endDate}
+          </Typography>
+        )}
         <Typography variant="body2">
           Diagnosed by: {entry.specialist}
         </Typography>

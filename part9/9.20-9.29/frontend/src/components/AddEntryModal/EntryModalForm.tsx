@@ -2,23 +2,39 @@ import {
   Alert,
   Box,
   Checkbox,
-  FormControlLabel,
-  FormGroup,
   MenuItem,
   TextField,
   Typography,
   SelectChangeEvent,
   Select,
   Button,
+  InputLabel,
+  FormControl,
+  OutlinedInput,
+  ListItemText,
 } from "@mui/material";
 import { useState, SyntheticEvent } from "react";
 import { HealthCheckRating, HealthCheckType } from "../../enum";
 import { Diagnoses, Discharge, NewEntry, SickLeave } from "../../types";
+import { DatePicker, DateField } from "@mui/x-date-pickers";
+import dayjs, { Dayjs } from "dayjs";
+
+type DiagnosesArray = Array<Diagnoses["code"]>;
 
 interface HealthCheckRatingOptions {
   value: HealthCheckRating;
   label: string;
 }
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
 
 const healthCheckRatingArray: HealthCheckRatingOptions[] = Object.entries(
   HealthCheckRating
@@ -54,47 +70,41 @@ const EntryModalForm = ({
   error,
 }: EntryModalFormProps) => {
   const [description, setDescription] = useState("");
-  const [date, setDate] = useState("");
+  const [date, setDate] = useState("2023-11-01");
   const [healthCheckRating, setHealthCheckRating] = useState(
     HealthCheckRating.Healthy
   );
-  const [diagnosisCodes, setDiagnosesCodes] = useState<
-    Array<Diagnoses["code"]>
-  >([]);
+  const [diagnosisCodes, setDiagnosesCodes] = useState<DiagnosesArray>([]);
   const [specialist, setSpecialist] = useState("");
   const [type, setType] = useState(HealthCheckType.HealthCheck);
   const [employerName, setEmployerName] = useState("");
   const [sickLeave, setSickLeave] = useState<SickLeave>({
-    startDate: "",
-    endDate: "",
+    startDate: "2023-11-01",
+    endDate: "2023-11-01",
   });
   const [discharge, setDischarge] = useState<Discharge>({
-    date: "",
+    date: "2023-11-01",
     criteria: "",
   });
 
-  const handleSickLeave = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setSickLeave((prevDate) => ({ ...prevDate, [name]: value }));
+  const handleDateChange = (e: Dayjs | null) => {
+    const newFormatDate = e?.format("YYYY-MM-DD");
+    setDate(newFormatDate as string);
   };
+  const handleSickLeave = (name: string, value: Dayjs | null) => {
+    setSickLeave((prevDate) => ({
+      ...prevDate,
+      [name]: value?.format("YYYY-MM-DD"),
+    }));
+  };
+
   const handleDischarge = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setDischarge((prevValue) => ({ ...prevValue, [name]: value }));
   };
 
-  const handleDiagnosisChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    if (event.target.checked) {
-      setDiagnosesCodes((prevDiagnoses) => [
-        ...prevDiagnoses,
-        event.target.name,
-      ]);
-    } else {
-      setDiagnosesCodes((prevDiagnoses) =>
-        prevDiagnoses.filter((code) => code !== event.target.name)
-      );
-    }
+  const handleDiagnosisChange = (event: SelectChangeEvent<DiagnosesArray>) => {
+    setDiagnosesCodes(event.target.value as DiagnosesArray);
   };
 
   const onHealthRatingChange = (event: SelectChangeEvent<string>) => {
@@ -138,6 +148,7 @@ const EntryModalForm = ({
       sickLeave.startDate !== "" &&
       sickLeave.endDate !== "" &&
       employerName !== "";
+
     const isHospitalValues = discharge.date !== "" && discharge.criteria !== "";
     switch (type) {
       case HealthCheckType.HealthCheck:
@@ -153,7 +164,11 @@ const EntryModalForm = ({
         }
         break;
       case HealthCheckType.OccupationalHealthcare:
-        if (isOccupationsValues) {
+        const isValidDate =
+          sickLeave.startDate !== "Invalid Date" &&
+          sickLeave.endDate !== "Invalid Date";
+
+        if (isOccupationsValues && isValidDate) {
           onSubmit({
             ...basicEntries,
             type: type,
@@ -202,26 +217,23 @@ const EntryModalForm = ({
         </Select>
         <TextField
           error={!description}
+          fullWidth
           size="small"
           margin="normal"
           label="Description"
-          fullWidth
           value={description}
           onChange={({ target }) => setDescription(target.value)}
           helperText={!description && "Description required"}
         />
-
-        <TextField
-          error={!date}
-          size="small"
-          margin="normal"
+        <DatePicker
           label="Date"
-          fullWidth
-          placeholder="YYYY-MM-DD"
-          value={date}
-          onChange={({ target }) => setDate(target.value)}
-          helperText={!description && "Date required"}
+          value={dayjs(date)}
+          onChange={handleDateChange}
+          format="YYYY-MM-DD"
+          maxDate={dayjs("2025-12-31")}
+          minDate={dayjs("2020-01-01")}
         />
+
         <TextField
           error={!specialist}
           size="small"
@@ -244,27 +256,31 @@ const EntryModalForm = ({
               onChange={({ target }) => setEmployerName(target.value)}
               helperText={!employerName && "Employer name required"}
             />
-            <TextField
-              error={!sickLeave.startDate}
-              size="small"
-              margin="normal"
+            <DateField
+              required
               label="Start date"
-              fullWidth
+              value={dayjs(sickLeave.startDate)}
+              onChange={(newValue) => handleSickLeave("startDate", newValue)}
+              format="YYYY-MM-DD"
+              maxDate={dayjs("2025-12-31")}
+              minDate={dayjs("2020-01-01")}
               name="startDate"
-              value={sickLeave.startDate}
-              onChange={handleSickLeave}
-              helperText={!sickLeave.startDate && "Start date required"}
+              helperText={
+                sickLeave.startDate === "Invalid Date" && "invalid start date"
+              }
             />
-            <TextField
-              error={!sickLeave.endDate}
-              size="small"
-              margin="normal"
+            <DateField
+              required
               label="End date"
+              value={dayjs(sickLeave.endDate)}
+              onChange={(newValue) => handleSickLeave("endDate", newValue)}
+              format="YYYY-MM-DD"
+              maxDate={dayjs("2025-12-31")}
+              minDate={dayjs("2020-01-01")}
               name="endDate"
-              fullWidth
-              value={sickLeave.endDate}
-              onChange={handleSickLeave}
-              helperText={!sickLeave.endDate && "End date required"}
+              helperText={
+                sickLeave.endDate === "Invalid Date" && "invalid end date"
+              }
             />
           </>
         )}
@@ -309,16 +325,29 @@ const EntryModalForm = ({
           </>
         )}
 
-        <FormGroup>
-          {diagnoses.map((diagnosis) => (
-            <FormControlLabel
-              key={diagnosis.name}
-              label={diagnosis.name}
-              name={diagnosis.code}
-              control={<Checkbox onChange={(e) => handleDiagnosisChange(e)} />}
-            />
-          ))}
-        </FormGroup>
+        <FormControl sx={{ m: 1, width: 300 }}>
+          <InputLabel id="demo-multiple-checkbox-label">Tag</InputLabel>
+          <Select
+            labelId="demo-multiple-checkbox-label"
+            id="demo-multiple-checkbox"
+            multiple
+            value={diagnosisCodes}
+            onChange={(e) => handleDiagnosisChange(e)}
+            input={<OutlinedInput label="Tag" />}
+            renderValue={(selected) => selected.join(", ")}
+            MenuProps={MenuProps}
+          >
+            {diagnoses.map((diagnosis) => (
+              <MenuItem key={diagnosis.code} value={diagnosis.code}>
+                <Checkbox
+                  checked={diagnosisCodes.indexOf(diagnosis.code) > -1}
+                />
+                <ListItemText primary={diagnosis.code} />
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
         {error && <Alert severity="error">{error}</Alert>}
 
         <Box
