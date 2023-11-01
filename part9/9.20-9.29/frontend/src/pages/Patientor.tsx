@@ -9,6 +9,7 @@ import TransgenderIcon from "@mui/icons-material/Transgender";
 import EntryDetails from "../components/EntryDetails/EntryDetails";
 import AddEntryModal from "../components/AddEntryModal";
 import { Gender } from "../enum";
+import axios from "axios";
 const Patientor = ({ diagnoses }: { diagnoses: Diagnoses[] }) => {
   const [patientor, setPatientor] = useState<SinglePatient | null>(null);
   const [modalOpen, setModalOpen] = useState<boolean>(false);
@@ -26,9 +27,8 @@ const Patientor = ({ diagnoses }: { diagnoses: Diagnoses[] }) => {
   const openModal = (): void => setModalOpen(true);
   const closeModal = (): void => {
     setModalOpen(false);
-    setError(undefined);
+    setError("");
   };
-
   if (patientor === null) {
     return <Typography>not found</Typography>;
   }
@@ -49,7 +49,6 @@ const Patientor = ({ diagnoses }: { diagnoses: Diagnoses[] }) => {
         id as string,
         values
       );
-
       setPatientor((prevValues) => {
         if (prevValues) {
           return {
@@ -59,8 +58,23 @@ const Patientor = ({ diagnoses }: { diagnoses: Diagnoses[] }) => {
         }
         return prevValues;
       });
-    } catch (error: unknown) {
-      console.error("Unknown error", error);
+      if (newEntries) {
+        closeModal();
+      }
+    } catch (e: unknown) {
+      if (axios.isAxiosError(e)) {
+        if (e?.response?.data && typeof e?.response?.data === "string") {
+          const message = e.response.data.replace(
+            "Something went wrong. Error: ",
+            ""
+          );
+          setError(message);
+        } else {
+          setError("Unrecognized axios error");
+        }
+      } else {
+        setError("Unknown error");
+      }
     }
   };
 
@@ -87,6 +101,7 @@ const Patientor = ({ diagnoses }: { diagnoses: Diagnoses[] }) => {
         error={error}
         diagnoses={diagnoses}
         onSubmit={submitNewEntry}
+        setError={setError}
       />
       <Button variant="contained" onClick={() => openModal()}>
         Add New Entry

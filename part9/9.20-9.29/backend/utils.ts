@@ -11,7 +11,7 @@ const isString = (text: unknown): text is string => {
   return typeof text === "string" || text instanceof String;
 };
 function isNumber(numberValue: unknown): numberValue is number {
-  return typeof numberValue === "number" || numberValue instanceof Number;
+  return typeof numberValue === "number";
 }
 
 const parseName = (name: unknown): string => {
@@ -99,7 +99,7 @@ const isHealthCheckRating = (params: number): params is HealthCheckRating => {
     .includes(params);
 };
 const parseHealthCheckRating = (rating: unknown): HealthCheckRating => {
-  if (!rating || !isNumber(rating) || !isHealthCheckRating(rating)) {
+  if (!isNumber(rating) || !isHealthCheckRating(rating)) {
     throw new Error("Incorrect rating value");
   }
   return rating;
@@ -176,7 +176,9 @@ const newEntryForPatient = (object: unknown): NewEntry => {
         if ("healthCheckRating" in object) {
           return {
             ...newEntry,
-            healthCheckRating: parseHealthCheckRating(object.healthCheckRating),
+            healthCheckRating: parseHealthCheckRating(
+              Number(object.healthCheckRating)
+            ),
           };
         } else {
           throw new Error("Incorrect data: missing discharge information");
