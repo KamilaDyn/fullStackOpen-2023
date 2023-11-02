@@ -203,18 +203,21 @@ const EntryModalForm = ({
     <Box>
       <Typography>New entry</Typography>
       <Box onSubmit={addEntry} component="form" noValidate={false}>
-        <Select
-          label="health check type"
-          fullWidth
-          value={type}
-          onChange={(e) => onHealthCheckType(e)}
-        >
-          {healthCheckTypeArray.map(({ value, label }) => (
-            <MenuItem key={label} value={value}>
-              {label}
-            </MenuItem>
-          ))}
-        </Select>
+        <FormControl sx={{ m: 1 }} fullWidth>
+          <InputLabel id="check-type-label">health check type</InputLabel>
+          <Select
+            labelId="check-type-label"
+            label="health check type"
+            value={type}
+            onChange={(e) => onHealthCheckType(e)}
+          >
+            {healthCheckTypeArray.map(({ value, label }) => (
+              <MenuItem key={label} value={value}>
+                {label}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
         <TextField
           error={!description}
           fullWidth
@@ -256,47 +259,54 @@ const EntryModalForm = ({
               onChange={({ target }) => setEmployerName(target.value)}
               helperText={!employerName && "Employer name required"}
             />
-            <DateField
-              required
-              label="Start date"
-              value={dayjs(sickLeave.startDate)}
-              onChange={(newValue) => handleSickLeave("startDate", newValue)}
-              format="YYYY-MM-DD"
-              maxDate={dayjs("2025-12-31")}
-              minDate={dayjs("2020-01-01")}
-              name="startDate"
-              helperText={
-                sickLeave.startDate === "Invalid Date" && "invalid start date"
-              }
-            />
-            <DateField
-              required
-              label="End date"
-              value={dayjs(sickLeave.endDate)}
-              onChange={(newValue) => handleSickLeave("endDate", newValue)}
-              format="YYYY-MM-DD"
-              maxDate={dayjs("2025-12-31")}
-              minDate={dayjs("2020-01-01")}
-              name="endDate"
-              helperText={
-                sickLeave.endDate === "Invalid Date" && "invalid end date"
-              }
-            />
+            <Box display={"flex"} justifyContent={"space-between"}>
+              {" "}
+              <DateField
+                required
+                label="Start date"
+                value={dayjs(sickLeave.startDate)}
+                onChange={(newValue) => handleSickLeave("startDate", newValue)}
+                format="YYYY-MM-DD"
+                maxDate={dayjs("2025-12-31")}
+                minDate={dayjs("2020-01-01")}
+                name="startDate"
+                helperText={
+                  sickLeave.startDate === "Invalid Date" && "invalid start date"
+                }
+              />
+              <DateField
+                required
+                label="End date"
+                value={dayjs(sickLeave.endDate)}
+                onChange={(newValue) => handleSickLeave("endDate", newValue)}
+                format="YYYY-MM-DD"
+                maxDate={dayjs("2025-12-31")}
+                minDate={dayjs("2020-01-01")}
+                name="endDate"
+                helperText={
+                  sickLeave.endDate === "Invalid Date" && "invalid end date"
+                }
+              />
+            </Box>
           </>
         )}
         {type === HealthCheckType.HealthCheck && (
-          <Select
-            label="health check rating"
-            fullWidth
-            value={healthCheckRating}
-            onChange={onHealthRatingChange}
-          >
-            {healthCheckRatingArray.map(({ label, value }) => (
-              <MenuItem key={label} value={value}>
-                {label}
-              </MenuItem>
-            ))}
-          </Select>
+          <FormControl sx={{ m: 1 }} fullWidth>
+            <InputLabel id="check-rating-label">Health check rating</InputLabel>
+            <Select
+              labelId="check-rating-label"
+              label="health check rating"
+              value={healthCheckRating}
+              onChange={onHealthRatingChange}
+              input={<OutlinedInput label="Diagnosis code" />}
+            >
+              {healthCheckRatingArray.map(({ label, value }) => (
+                <MenuItem key={label} value={value}>
+                  {label}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
         )}
         {type === HealthCheckType.Hospital && (
           <>
@@ -325,15 +335,17 @@ const EntryModalForm = ({
           </>
         )}
 
-        <FormControl sx={{ m: 1, width: 300 }}>
-          <InputLabel id="demo-multiple-checkbox-label">Tag</InputLabel>
+        <FormControl sx={{ m: 1 }} fullWidth>
+          <InputLabel id="demo-multiple-checkbox-label">
+            Diagnosis code
+          </InputLabel>
           <Select
             labelId="demo-multiple-checkbox-label"
             id="demo-multiple-checkbox"
             multiple
             value={diagnosisCodes}
             onChange={(e) => handleDiagnosisChange(e)}
-            input={<OutlinedInput label="Tag" />}
+            input={<OutlinedInput label="Diagnosis code" />}
             renderValue={(selected) => selected.join(", ")}
             MenuProps={MenuProps}
           >

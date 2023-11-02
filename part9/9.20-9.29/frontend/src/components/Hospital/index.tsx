@@ -21,7 +21,7 @@ const Hospital = ({
           ))}
         </ul>
         <Typography>
-          {entry.discharge.criteria}: at {entry.discharge.date}
+          {entry.discharge.criteria} at {entry.discharge.date}
         </Typography>
         <Typography variant="body2" mt={"0.5em"}>
           Diagnosed by: {entry.specialist}
