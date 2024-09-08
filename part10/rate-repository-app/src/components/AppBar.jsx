@@ -17,7 +17,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: 20
+    paddingHorizontal: 20,
+    height: 100
   },
   text: {
     color: '#fff',
@@ -25,8 +26,7 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     width: '100%',
-    backgroundColor: theme.colors.primary,
-    height: 100
+    backgroundColor: theme.colors.primary
   }
 })
 
@@ -34,8 +34,8 @@ const AppBar = () => {
   return (
     <ScrollView horizontal style={styles.scrollView}>
       <View style={styles.container}>
-        <AppBarTab text={'Repositories'} />
-        <AppBarTab text={'Sign In'} />
+        <AppBarTab text={'Repositories'} path={'/'} />
+        <AppBarTab text={'Sign In'} path={'/signin'} />
       </View>
     </ScrollView>
   )
