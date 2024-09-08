@@ -1,31 +1,43 @@
-import { View, StyleSheet, Pressable } from 'react-native'
-import Constants from 'expo-constants'
+import {
+  View,
+  StyleSheet,
+  Pressable,
+  SafeAreaView,
+  ScrollView
+} from 'react-native'
+// import Constants from 'expo-constants'
 import theme from '../theme'
 import Text from './Text'
+import AppBarTab from './AppBarTab'
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: Constants.statusBarHeight,
-    backgroundColor: theme.colors.textPrimary,
-    width: '100%',
-    height: 100,
     display: 'flex',
+    gap: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
     justifyContent: 'center',
-    paddingLeft: 10
+    paddingHorizontal: 20
   },
   text: {
     color: '#fff',
     fontSize: theme.fontSizes.heading
+  },
+  scrollView: {
+    width: '100%',
+    backgroundColor: theme.colors.primary,
+    height: 100
   }
 })
 
 const AppBar = () => {
   return (
-    <Pressable style={styles.container}>
-      <Text fontSize='subheading' fontWeight='bold' style={styles.text}>
-        Repositories
-      </Text>
-    </Pressable>
+    <ScrollView horizontal style={styles.scrollView}>
+      <View style={styles.container}>
+        <AppBarTab text={'Repositories'} />
+        <AppBarTab text={'Sign In'} />
+      </View>
+    </ScrollView>
   )
 }
 
